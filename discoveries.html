@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Discovery Feed — Phase Transition</title>
+<meta name="description" content="Real findings AI helped make in medicine, math, biology and more, each graded on how solid the evidence is.">
+<link rel="canonical" href="https://richiebuchanan.github.io/PhaseTransition/discoveries.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Phase Transition">
+<meta property="og:title" content="Discovery Feed: what AI is actually discovering">
+<meta property="og:description" content="Real findings AI helped make in medicine, math, biology and more, each graded on how solid the evidence is.">
+<meta property="og:url" content="https://richiebuchanan.github.io/PhaseTransition/discoveries.html">
+<meta property="og:image" content="https://richiebuchanan.github.io/PhaseTransition/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Phase Transition: AI news without the hype or the panic. Discoveries, speed, upside, risks and the money, every claim sourced and graded.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Discovery Feed: what AI is actually discovering">
+<meta name="twitter:description" content="Real findings AI helped make in medicine, math, biology and more, each graded on how solid the evidence is.">
+<meta name="twitter:image" content="https://richiebuchanan.github.io/PhaseTransition/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M3 27 C 14 26, 21 22, 24 4' fill='none' stroke='%235a3fd0' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='24' cy='4' r='2.6' fill='%235a3fd0'/%3E%3C/svg%3E">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Phase Transition — shared styles (same visual system as Longevity News / Surety Market Intelligence) */
+:root {
+  color-scheme: light;
+  --ground:#f3f3f6; --plane:#e9e9ef; --surface:#ffffff; --surface-2:#f6f6fa;
+  --ink:#1a1a1f; --ink-secondary:#4d4d57; --muted:#75757f;
+  --border:rgba(26,26,31,0.12); --border-strong:rgba(26,26,31,0.22);
+  --accent:#5a3fd0; --accent-ink:#ffffff; --accent-wash:rgba(90,63,208,0.08); --accent-wash-2:rgba(90,63,208,0.20); --link:#4a32b8;
+  --tier-1:#1f8a4c; --tier-2:#2a78d6; --tier-3:#eda100; --tier-4:#eb6834; --tier-5:#8a8a8a;
+  --v-confirmed:#1f8a4c; --v-solid:#2a78d6; --v-bigif:#c98500; --v-early:#8a8a8a;
+  --risk:#c8102e; --bubble:#b45309; --accel:#5a3fd0;
+  --up:#c8102e; --down:#1f8a4c; --flat:#75757f;
+  --warn:#b45309; --warn-wash:rgba(180,83,9,0.08); --warn-wash-2:rgba(180,83,9,0.22);
+  --ok:#1f8a4c; --ok-wash:rgba(31,138,76,0.10); --ok-wash-2:rgba(31,138,76,0.28);
+  --grid:rgba(26,26,31,0.08);
+  --shadow-1:0 1px 2px rgba(26,26,31,0.06); --shadow-2:0 8px 24px rgba(26,26,31,0.10);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  color-scheme:dark; --ground:#121216; --plane:#18181d; --surface:#1e1e24; --surface-2:#26262e;
+  --ink:#f2f2f5; --ink-secondary:#c7c7cf; --muted:#9a9aa4; --border:rgba(242,242,245,0.12); --border-strong:rgba(242,242,245,0.22);
+  --accent:#a48bff; --accent-ink:#160d3a; --accent-wash:rgba(164,139,255,0.14); --accent-wash-2:rgba(164,139,255,0.28); --link:#b9a6ff;
+  --tier-1:#33b06a; --tier-2:#3987e5; --tier-3:#c98500; --tier-4:#d95926; --tier-5:#8f8f8f;
+  --v-confirmed:#33b06a; --v-solid:#3987e5; --v-bigif:#f0b429; --v-early:#8f8f99;
+  --risk:#ff4d68; --bubble:#f0a33a; --accel:#a48bff;
+  --up:#ff6b81; --down:#33b06a; --flat:#9a9aa4;
+  --warn:#f0a33a; --warn-wash:rgba(240,163,58,0.10); --warn-wash-2:rgba(240,163,58,0.26);
+  --ok:#33b06a; --ok-wash:rgba(51,176,106,0.14); --ok-wash-2:rgba(51,176,106,0.3);
+  --grid:rgba(242,242,245,0.08);
+  --shadow-1:0 1px 2px rgba(0,0,0,0.30); --shadow-2:0 12px 32px rgba(0,0,0,0.45);
+} }
+* { box-sizing:border-box; } html { -webkit-text-size-adjust:100%; } html,body { overflow-x:hidden; width:100%; max-width:100vw; }
+body { margin:0; background:var(--ground); color:var(--ink); font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5; }
+@media (prefers-reduced-motion:no-preference) { .entry-body { transition:grid-template-rows 180ms ease; } .chevron { transition:transform 150ms ease; } }
+h1,h2,h3 { font-weight:700; text-wrap:balance; margin:0; } a { color:var(--link); }
+.mono { font-family:"IBM Plex Mono",ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+.app { max-width:1040px; margin:0 auto; padding:28px 20px 80px; width:100%; }
+
+/* masthead */
+.masthead { padding:8px 4px 0; margin-bottom:18px; }
+.masthead h1 { font-size:clamp(28px,4vw,38px); letter-spacing:-0.01em; display:flex; align-items:center; gap:10px; }
+.masthead h1 a { color:inherit; text-decoration:none; display:inline-flex; align-items:center; gap:10px; }
+.logo-mark { width:30px; height:30px; flex:none; }
+.mast-sub { margin:10px 0 0; max-width:66ch; color:var(--ink-secondary); font-size:15px; }
+.mast-meta { margin-top:14px; font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12px; color:var(--muted); }
+.masthead-divider { border-top:1px solid var(--border); margin:16px 0; }
+.site-nav { display:flex; align-items:center; gap:6px 6px; margin-top:12px; font-size:13px; font-weight:600; flex-wrap:wrap; position:relative; z-index:20; }
+.nav-toggle { display:none; }
+.nav-groups { display:flex; gap:4px; flex-wrap:wrap; }
+.nav-group { position:relative; }
+.nav-group-btn { all:unset; cursor:pointer; display:inline-flex; align-items:center; gap:5px; padding:6px 10px; border-radius:7px; color:var(--ink-secondary); border:1px solid transparent; }
+.nav-group-btn:hover, .nav-group.open .nav-group-btn { color:var(--ink); background:var(--surface); border-color:var(--border); }
+.nav-group-btn:focus-visible, .nav-toggle:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.nav-group.has-current .nav-group-btn { color:var(--accent); box-shadow:inset 0 -2px 0 var(--accent); border-radius:7px 7px 0 0; }
+.caret { font-size:10px; opacity:.7; }
+@media (prefers-reduced-motion:no-preference) { .caret { transition:transform 150ms ease; } }
+.nav-group.open .caret { transform:rotate(180deg); }
+.nav-menu { display:none; position:absolute; top:calc(100% + 6px); left:0; min-width:260px; background:var(--surface); border:1px solid var(--border-strong); border-radius:10px; box-shadow:var(--shadow-2); padding:6px; }
+.nav-group.open .nav-menu { display:block; }
+.nav-menu a { display:block; text-decoration:none; padding:8px 10px; border-radius:7px; color:var(--ink); }
+.nav-menu a:hover, .nav-menu a:focus-visible { background:var(--accent-wash); outline:none; }
+.nav-menu a.is-current { background:var(--accent-wash); }
+.nav-menu a.is-current .nl { color:var(--accent); }
+.nav-menu .nl { display:block; font-weight:600; font-size:13.5px; }
+.nav-menu .nh { display:block; font-weight:400; font-size:12px; color:var(--muted); margin-top:1px; }
+.site-nav a.sister { color:var(--muted); font-weight:500; margin-left:auto; text-decoration:none; padding:6px 0; }
+.page-title { font-size:20px; margin:4px 0 0; }
+.page-tagline { margin:6px 0 0; font-size:13px; color:var(--muted); max-width:72ch; }
+.masthead-title-row { display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.overview-link { color:var(--link); font-weight:700; font-size:13px; text-decoration:none; white-space:nowrap; }
+.disclaimer-banner { display:flex; gap:10px; align-items:flex-start; background:var(--accent-wash); border:1px solid var(--accent-wash-2); border-radius:8px; padding:12px 14px; font-size:13px; line-height:1.5; }
+.disclaimer-banner strong { color:var(--accent); }
+.conn-banner { margin:8px 0 0; padding:10px 14px; border-radius:8px; background:var(--accent-wash); border:1px solid var(--accent-wash-2); font-size:13.5px; }
+
+/* cards & sections */
+.card { background:var(--surface); border:1px solid var(--border); border-radius:10px; box-shadow:var(--shadow-1); padding:18px 20px; margin:0 0 18px; }
+.card h2 { font-size:16px; } .card .sub { font-size:12.5px; color:var(--muted); margin:4px 0 12px; max-width:76ch; }
+.section-head { display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 10px; margin:26px 2px 10px; }
+.section-head h2 { font-size:16px; } .section-head p { font-size:12.5px; color:var(--muted); margin:0; max-width:76ch; }
+.note { font-size:12px; color:var(--muted); max-width:78ch; }
+
+/* filter bar */
+.filter-bar { display:flex; flex-wrap:wrap; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:10px 12px; margin-bottom:16px; box-shadow:var(--shadow-1); position:sticky; top:12px; z-index:5; }
+.search-wrap { position:relative; flex:1 1 200px; min-width:160px; }
+.search-wrap svg { position:absolute; left:9px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:var(--muted); pointer-events:none; }
+.search-wrap input { width:100%; font:inherit; font-size:13.5px; padding:7px 10px 7px 28px; border-radius:6px; border:1px solid var(--border-strong); background:var(--surface-2); color:var(--ink); }
+.search-wrap input:focus-visible, select:focus-visible, button:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+.cat-toggle { display:inline-flex; gap:4px; padding:3px; background:var(--surface-2); border:1px solid var(--border); border-radius:7px; flex-wrap:wrap; }
+.cat-btn { all:unset; cursor:pointer; font-size:12px; font-weight:500; padding:5px 9px; border-radius:5px; color:var(--ink-secondary); display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+.cat-btn .dot { width:7px; height:7px; border-radius:50%; flex:none; } .cat-btn:hover { background:var(--surface); }
+.cat-btn.is-active { background:var(--surface); color:var(--ink); box-shadow:0 0 0 1px var(--border-strong); }
+select { font:inherit; font-size:12.5px; color:var(--ink); background:var(--surface-2); border:1px solid var(--border-strong); border-radius:6px; padding:6px 9px; cursor:pointer; }
+.reset-btn { all:unset; cursor:pointer; font-size:12px; color:var(--muted); padding:6px 8px; border-radius:6px; } .reset-btn:hover { color:var(--ink); background:var(--surface-2); }
+.result-line { font-size:12.5px; color:var(--muted); margin:0 2px 10px; } .result-line strong { color:var(--ink); }
+
+/* ledger entries (expandable) */
+.ledger { display:flex; flex-direction:column; gap:8px; }
+.entry { background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--border-strong); border-radius:8px; box-shadow:var(--shadow-1); overflow:hidden; scroll-margin-top:96px; }
+@keyframes cite-flash { 0% { background:var(--accent-wash-2); } 100% { background:var(--surface); } } .entry.is-highlighted { animation:cite-flash 1.8s ease-out; }
+.entry-head { all:unset; box-sizing:border-box; display:grid; grid-template-columns:40px 1fr 20px; align-items:center; gap:14px; width:100%; padding:13px 14px; cursor:pointer; }
+.entry-head:hover { background:var(--surface-2); } .entry-head:focus-visible { outline:2px solid var(--accent); outline-offset:-2px; }
+.score-badge { font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:14px; width:40px; height:40px; border-radius:7px; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1; background:var(--surface-2); border:1px solid var(--border); }
+.score-badge span { font-size:8px; font-weight:500; color:var(--muted); margin-top:2px; }
+.entry-main { min-width:0; text-align:left; }
+.entry-title { font-weight:600; font-size:14.5px; margin:0 0 6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.badges { display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+.badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; padding:2px 7px; border-radius:20px; color:var(--ink-secondary); background:var(--surface-2); border:1px solid var(--border); white-space:nowrap; }
+.badge .dot { width:6px; height:6px; border-radius:50%; flex:none; } .badge.mono { font-family:"IBM Plex Mono",monospace; }
+.badge.verdict { font-weight:700; color:#fff; border:none; }
+.badge.field { background:var(--accent-wash); border-color:var(--accent-wash-2); color:var(--accent); font-weight:600; }
+.badge.new-badge { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); font-weight:700; }
+.badge.landmark { background:var(--ok-wash); border-color:var(--ok-wash-2); color:var(--ok); font-weight:600; }
+.badge.dir-escalating { color:var(--up); border-color:currentColor; font-weight:600; } .badge.dir-easing { color:var(--down); border-color:currentColor; font-weight:600; } .badge.dir-neutral { font-weight:600; }
+.chevron { justify-self:end; width:18px; height:18px; color:var(--muted); } .entry.is-open .chevron { transform:rotate(180deg); }
+.entry-body { display:grid; grid-template-rows:0fr; } .entry.is-open .entry-body { grid-template-rows:1fr; } .entry-body-inner { overflow:hidden; min-height:0; }
+.entry-body-content { padding:14px 18px 20px 68px; border-top:1px solid var(--border); }
+.entry-summary { font-size:13.5px; color:var(--ink-secondary); margin:0 0 12px; max-width:70ch; }
+.entry-bullets { margin:0 0 12px; padding-left:18px; font-size:13px; color:var(--ink-secondary); } .entry-bullets li { margin-bottom:4px; }
+.callout { font-size:13px; background:var(--surface-2); border-left:2px solid var(--accent); padding:9px 12px; border-radius:0 6px 6px 0; margin:0 0 10px; max-width:70ch; }
+.callout strong { color:var(--accent); }
+.callout.hype { background:var(--warn-wash); border-left-color:var(--warn); } .callout.hype strong { color:var(--warn); }
+.callout.analogy { background:var(--accent-wash); border-left-color:var(--accent); } .callout.analogy strong { color:var(--accent); }
+.callout.counter { background:var(--ok-wash); border-left-color:var(--ok); } .callout.counter strong { color:var(--ok); }
+.entry-meta { font-size:12px; color:var(--muted); margin:0 0 12px; } .entry-meta strong { color:var(--ink-secondary); font-weight:600; }
+.entry-link { display:inline-flex; align-items:center; gap:5px; font-size:12.5px; font-weight:600; text-decoration:none; color:var(--link); margin-right:14px; } .entry-link:hover { text-decoration:underline; }
+.rationale { font-size:11.5px; color:var(--muted); margin:-4px 0 12px; font-style:italic; max-width:76ch; }
+.empty-state { text-align:center; padding:40px 20px; color:var(--muted); font-size:13.5px; background:var(--surface); border:1px dashed var(--border-strong); border-radius:8px; }
+footer.note { margin-top:26px; font-size:11.5px; color:var(--muted); text-align:center; max-width:none; }
+
+/* pills */
+.track-pill { display:inline-block; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:3px 8px; border-radius:20px; text-align:center; border:1px solid currentColor; white-space:nowrap; }
+.track-acceleration { color:var(--accel); } .track-risk { color:var(--risk); } .track-bubble { color:var(--bubble); }
+.sev { letter-spacing:1px; font-family:"IBM Plex Mono",monospace; }
+
+/* analysis lists */
+.analysis-section { margin:0 0 16px; } .analysis-section h3 { font-size:12.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--accent); margin:0 0 8px; }
+.analysis-section p { font-size:13.5px; margin:0; max-width:74ch; line-height:1.65; }
+.arrow-list { list-style:none; margin:0; padding:0; font-size:13.5px; } .arrow-list li { position:relative; padding-left:24px; margin-bottom:9px; max-width:70ch; }
+.arrow-list li::before { content:"\2192"; position:absolute; left:4px; color:var(--accent); font-weight:700; }
+.arrow-list.hype li::before { content:"\26A0"; color:var(--warn); }
+.arrow-list.contested li::before { content:"?"; color:var(--warn); font-weight:800; left:7px; }
+.arrow-list.change li::before { content:"\21C4"; color:var(--muted); }
+.item-label { font-weight:700; margin-right:4px; }
+
+/* footnotes & sources */
+sup.fn { font-size:10px; line-height:0; margin-left:2px; white-space:nowrap; } sup.fn a { color:var(--link); text-decoration:none; font-weight:700; font-family:"IBM Plex Mono",monospace; padding:0 1px; } sup.fn a:hover { text-decoration:underline; }
+.sources { margin-top:34px; } .sources h2 { font-size:15px; margin:0 0 6px; } .sources p { font-size:12px; color:var(--muted); margin:0 0 10px; max-width:72ch; }
+.sources ol { padding-left:26px; margin:0; font-size:12.5px; color:var(--ink-secondary); } .sources li { margin-bottom:6px; overflow-wrap:anywhere; scroll-margin-top:20px; } .sources li:target { background:var(--accent-wash); border-radius:4px; }
+.sources .unverified { color:var(--warn); font-style:italic; }
+
+/* charts */
+.viz { width:100%; display:block; overflow:visible; }
+.viz text { font-family:"Inter",system-ui,sans-serif; fill:var(--muted); font-size:11px; }
+.viz .lbl { fill:var(--ink-secondary); font-size:11.5px; }
+.viz .val { fill:var(--ink); font-size:11.5px; font-weight:600; font-family:"IBM Plex Mono",monospace; }
+.viz .grid { stroke:var(--grid); stroke-width:1; } .viz .axis { stroke:var(--border-strong); stroke-width:1; }
+.viz .hit { fill:transparent; cursor:default; }
+.tooltip { position:fixed; z-index:50; pointer-events:none; background:var(--surface); color:var(--ink); border:1px solid var(--border-strong); box-shadow:var(--shadow-2); border-radius:8px; padding:8px 10px; font-size:12px; max-width:280px; line-height:1.4; display:none; }
+.tooltip strong { display:block; margin-bottom:2px; } .tooltip .mono { color:var(--ink-secondary); }
+.table-toggle { all:unset; cursor:pointer; font-size:12px; font-weight:600; color:var(--link); margin-top:8px; display:inline-block; }
+.data-table { width:100%; border-collapse:collapse; font-size:12.5px; margin-top:10px; }
+.data-table th, .data-table td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--border); vertical-align:top; }
+.data-table th { font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); font-weight:600; }
+.data-table td.num { font-family:"IBM Plex Mono",monospace; text-align:right; white-space:nowrap; }
+.stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+.stat { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px 16px; box-shadow:var(--shadow-1); }
+.stat .k { font-size:12px; color:var(--muted); margin:0 0 4px; } .stat .v { font-family:"IBM Plex Mono",monospace; font-size:24px; font-weight:600; margin:0; }
+.stat .d { font-size:12px; color:var(--ink-secondary); margin:4px 0 0; }
+
+@media (max-width:768px) {
+  .app { padding:16px 12px 50px; } * { min-width:0; } .masthead h1 { font-size:26px; } .mast-sub { font-size:13px; }
+  .nav-toggle { all:unset; cursor:pointer; display:inline-flex; align-items:center; gap:8px; padding:9px 14px; border:1px solid var(--border-strong); border-radius:8px; background:var(--surface); color:var(--ink); font-weight:700; min-height:24px; }
+  .nav-here { font-weight:500; color:var(--accent); }
+  .site-nav { flex-direction:column; align-items:stretch; }
+  .nav-groups { display:none; flex-direction:column; gap:4px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:8px; box-shadow:var(--shadow-1); }
+  .nav-groups.open { display:flex; }
+  .nav-group-btn { cursor:default; pointer-events:none; padding:8px 8px 2px; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); background:none !important; border-color:transparent !important; box-shadow:none !important; }
+  .nav-group.has-current .nav-group-btn { color:var(--muted); }
+  .caret { display:none; }
+  .nav-menu { display:block; position:static; box-shadow:none; border:none; padding:0; min-width:0; background:none; }
+  .nav-menu a { padding:9px 10px; }
+  .site-nav a.sister { margin-left:0; padding:4px 2px; }
+  .filter-bar { position:static; flex-direction:column; align-items:stretch; padding:10px; gap:10px; } .filter-bar > * { width:100%; flex:1 1 100%; }
+  .cat-btn { flex:1 1 auto; justify-content:center; padding:8px 9px; } select { width:100%; padding:9px; font-size:13px; }
+  .entry-head { grid-template-columns:28px 1fr 18px; gap:10px; padding:11px 12px; } .score-badge { width:28px; height:28px; font-size:11px; } .score-badge span { font-size:6.5px; }
+  .entry-title { white-space:normal; overflow:visible; font-size:13.5px; } .badge { font-size:10px; }
+  .entry-body-content { padding:12px 12px 16px; } .card { padding:14px; }
+}
+
+abbr.gloss { text-decoration:none; border-bottom:1.5px dotted var(--muted); cursor:help; }
+abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:2px; }
+.plain { font-size:14px; color:var(--ink); background:var(--accent-wash); border:1px solid var(--accent-wash-2); border-radius:8px; padding:10px 14px; margin:0 0 14px; max-width:78ch; }
+.plain strong { color:var(--accent); }
+.track-upside { color:var(--down); }
+
+</style>
+<style>
+  .signal-row { display:grid; grid-template-columns:110px 1fr; gap:12px; padding:10px 0; border-top:1px solid var(--border); }
+  .signal-row:first-of-type { border-top:none; } .signal-row .track-pill { align-self:start; }
+  .signal-title { font-weight:600; font-size:13.5px; margin:0 0 3px; } .signal-title a { color:var(--ink); text-decoration:none; } .signal-title a:hover { text-decoration:underline; }
+  .signal-sum { font-size:12.5px; color:var(--ink-secondary); margin:0 0 4px; max-width:78ch; }
+  .signal-meta { font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--muted); display:flex; gap:10px; flex-wrap:wrap; }
+  .legend { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:0 0 12px; }
+  .legend-cell { background:var(--surface); border:1px solid var(--border); border-left:4px solid; border-radius:8px; padding:9px 12px; font-size:12px; color:var(--ink-secondary); }
+  .legend-cell strong { display:block; font-size:13px; color:var(--ink); margin-bottom:2px; }
+  .longevity-link { display:inline-flex; gap:6px; align-items:center; font-size:12.5px; font-weight:600; color:var(--ok); text-decoration:none; }
+  .longevity-link:hover { text-decoration:underline; }
+  @media (max-width:768px) { .legend { grid-template-columns:1fr; } .signal-row { grid-template-columns:1fr; gap:6px; } .signal-row .track-pill { justify-self:start; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="masthead" id="masthead"></header>
+
+  <section class="card" id="signals-card" hidden>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px"><h2>Latest from the frontier</h2><span class="note">The newest news on speed, the upside, the risks and the money. <a href="baseline.html">See the big picture →</a></span></div>
+    <div id="signals-list" style="margin-top:8px"></div>
+  </section>
+
+  <section class="card" id="analysis-card" hidden>
+    <h2 id="analysis-title">The last six weeks in brief</h2>
+    <p class="sub mono" id="analysis-meta"></p>
+    <div class="analysis-section"><h3>In short</h3><p id="analysis-summary"></p></div>
+    <div class="analysis-section"><h3>What stood out</h3><ul class="arrow-list" id="analysis-findings"></ul></div>
+    <div class="analysis-section"><h3>Reality check: where headlines went too far</h3><ul class="arrow-list hype" id="analysis-hype"></ul></div>
+  </section>
+
+  <div class="section-head"><h2>How we grade each discovery</h2><p>Two separate questions: Is it real? And how big a deal is it?</p></div>
+  <div class="legend" id="legend"></div>
+  <p class="note" style="margin:0 2px 14px"><strong>How solid is it?</strong> Tier 1 = confirmed by independent experts more than once · 2 = checked by outside experts or tested in a fair trial · 3 = an early report not yet reviewed · 4 = a company or university says so · 5 = someone's claim or opinion. <strong>How big?</strong> A small step, a big step, or a game-changer for its field. <strong>Signal</strong> (1–10) is how much it should change your sense of where AI is heading. Think of it like a weather report: tier is how sure the forecaster is, size is how big the storm would be.</p>
+
+  <div class="filter-bar" role="search">
+    <div class="search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input id="search-input" type="text" placeholder="Search title, summary, lab, AI system…" autocomplete="off" aria-label="Search discoveries"></div>
+    <div class="cat-toggle" id="verdict-toggle" role="group" aria-label="Filter by verdict"></div>
+    <select id="field-select" aria-label="Field"></select>
+    <select id="tier-select" aria-label="Reality tier"></select>
+    <select id="lab-select" aria-label="Lab or organization"></select>
+    <select id="sort-select" aria-label="Sort">
+      <option value="added_desc" selected>Sort: newest added</option><option value="pub_desc">Sort: newest published</option><option value="signal">Sort: signal, high to low</option><option value="reality">Sort: most solid first</option><option value="magnitude">Sort: biggest first</option>
+    </select>
+    <button class="reset-btn" id="reset-btn" type="button">Reset</button>
+  </div>
+  <p class="result-line" id="result-line"></p>
+  <div class="ledger" id="ledger"></div>
+  <p class="empty-state" id="empty-state" hidden>No discoveries match these filters.</p>
+</div>
+<script>
+/* Phase Transition — shared client: Supabase, masthead/nav, footnotes, formatting, tooltip. */
+(function () {
+  const SUPABASE_URL = "https://acxdvzcohjayvmqdaoke.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_2n567u9zKgZ-L-M_yGRf5Q_HEV_p1-f";
+  const LONGEVITY_URL = "https://richiebuchanan.github.io/LongevityNews/";
+
+  const NAV = [
+    ["Start here", [["index.html", "Start here", "New? Begin with the two-minute tour"], ["storyline.html", "Timeline", "Every major story since Jan 2023, at a glance"], ["baseline.html", "State of the Frontier", "Where things stand today"]]],
+    ["What's happening", [["discoveries.html", "Discovery Feed", "Real things AI helped discover, graded"], ["curve.html", "The Curve", "How fast AI is getting better"], ["timeline.html", "The Record", "The full history, month by month"]]],
+    ["Good & bad", [["upside.html", "What Could Go Right", "Cures, science, everyday help"], ["risk.html", "What Could Go Wrong", "Harms, misuse, loss of control"], ["bubble.html", "Bubble Watch", "Is the money getting ahead of reality?"]]],
+    ["People & media", [["voices.html", "Voices & Players", "Who's who: people and companies"], ["media.html", "Podcasts & Video", "The best listening and watching"]]],
+  ];
+  const PAGES = NAV.flatMap(g => g[1]);
+
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+  const fmtDate = iso => { if (!iso) return "—"; const d = new Date(iso + (iso.length === 10 ? "T00:00:00" : "")); return isNaN(d) ? iso : d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }); };
+  const fmtMonth = iso => { if (!iso) return "—"; const d = new Date(iso + "T00:00:00"); return isNaN(d) ? iso : d.toLocaleDateString("en-US", { month: "short", year: "numeric" }); };
+  const fmtDateTime = iso => { if (!iso) return "—"; const d = new Date(iso); return isNaN(d) ? iso : d.toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" }); };
+  const bullets = bp => typeof bp === "string" ? bp.split("\n").map(s => s.replace(/^-\s*/, "").trim()).filter(Boolean) : Array.isArray(bp) ? bp : [];
+  const todayISO = () => new Date().toISOString().slice(0, 10);
+
+  const TIER_LABEL = { 1: "Confirmed", 2: "Checked by experts", 3: "Early report", 4: "Company says", 5: "Opinion / claim" };
+  const DIR_LABEL = { escalating: "↑ Escalating", easing: "↓ Easing", neutral: "→ Neutral" };
+  const DIR_BY_TRACK = {
+    upside: { escalating: ["↑ Progress", "var(--down)"], easing: ["↓ Setback", "var(--up)"], neutral: ["→ Mixed", "var(--flat)"] },
+    risk: { escalating: ["↑ More worrying", "var(--up)"], easing: ["↓ Reassuring", "var(--down)"], neutral: ["→ Neither", "var(--flat)"] },
+    bubble: { escalating: ["↑ More bubble-like", "var(--up)"], easing: ["↓ Less bubble-like", "var(--down)"], neutral: ["→ Mixed", "var(--flat)"] },
+    acceleration: { escalating: ["↑ Speeding up", "var(--accent)"], easing: ["↓ Slowing down", "var(--flat)"], neutral: ["→ Neither", "var(--flat)"] },
+  };
+  const dirInfo = (track, dir) => (DIR_BY_TRACK[track] || DIR_BY_TRACK.risk)[dir] || ["", "var(--flat)"];
+
+  /* plain-English glossary: first use of each term on a page gets a dotted underline and a hover/tap definition */
+  const GLOSS = {
+    "peer-reviewed": "Checked by other independent experts before being published in a journal, like a referee reviewing a play before it counts.",
+    "preprint": "A research paper shared publicly before other experts have formally reviewed it. A first draft, basically.",
+    "randomized trial": "A fair test: people are split into groups by chance (like a coin flip), so any difference between groups is likely caused by the thing being tested.",
+    "randomized controlled trial": "A fair test: people are split into groups by chance (like a coin flip), so any difference between groups is likely caused by the thing being tested.",
+    "Phase III": "The final, largest round of testing a new drug in people, usually hundreds or thousands of patients, before it can be approved.",
+    "FDA": "The U.S. Food and Drug Administration, the government agency that approves new medicines.",
+    "annualized": "Taking one month's sales and multiplying by 12. A quick snapshot, not a full year of actual sales.",
+    "run rate": "Taking one month's sales and multiplying by 12. A quick snapshot, not a full year of actual sales.",
+    "IPO": "Initial public offering: when a private company first sells shares of itself on the stock market.",
+    "SEC": "The Securities and Exchange Commission, the U.S. agency that oversees the stock market. Companies must file honest reports with it.",
+    "METR": "An independent nonprofit that tests how capable and how risky AI systems are, like a crash-test lab for AI.",
+    "time horizon": "How long a task (measured in human working hours) an AI can finish on its own about half the time.",
+    "benchmark": "A standard test used to compare AI systems, like the SAT for computers.",
+    "sandbox": "A sealed-off practice area where AI can be tested without touching the real world, like a fenced playground.",
+    "scheming": "When an AI secretly works toward a goal while hiding it from the people overseeing it.",
+    "interpretability": "The science of looking inside an AI to see how it reaches its answers, like seeing a student's scratch work instead of just the final answer.",
+    "intelligence explosion": "The idea that once AI can improve AI, each improvement speeds up the next, like compound interest on intelligence.",
+    "superintelligence": "AI that is far smarter than the smartest humans at almost everything.",
+    "AGI": "Artificial general intelligence: AI that can do most thinking tasks as well as a capable person. Experts define it differently.",
+    "Metaculus": "A public forecasting website where thousands of people make and track predictions; their combined guess is often quite good.",
+    "circular": "When a company helps pay for its own customers' purchases. Sales look strong, but the money partly goes in a circle.",
+    "data center": "A giant warehouse full of computers. AI is trained and run in these.",
+    "proof": "In math, a step-by-step argument showing something is true for certain, not just usually true.",
+    "protein": "Tiny molecular machines that do most of the work in living things. Their shape decides what they do.",
+    "AlphaFold": "Google DeepMind's AI that predicts the 3D shape of proteins. Its creators won the 2024 Nobel Prize in Chemistry.",
+    "valuation": "What investors say a company is worth, based mostly on what they expect it to earn in the future.",
+    "productivity": "How much a worker produces in an hour. When it rises, an economy can pay people more without prices rising.",
+    "IMF": "The International Monetary Fund, a global organization that watches for financial risks around the world.",
+    "AI agent": "An AI that doesn't just answer questions but takes actions on its own, like clicking, coding or browsing, to finish a task.",
+    "Responsible Scaling Policy": "Anthropic's own rulebook that requires extra safety steps when its AI reaches certain danger levels.",
+    "aging clock": "A blood or DNA test that estimates how \"old\" your body seems, which can differ from your age in years.",
+    "mammogram": "An X-ray of the breast used to screen for cancer.",
+  };
+  function glossify(root) {
+    if (!root) return;
+    const terms = Object.keys(GLOSS).sort((a, b) => b.length - a.length);
+    const present = new Set([...document.querySelectorAll("abbr.gloss")].map(a => a.dataset.term));
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => {
+      const p = n.parentElement; if (!p || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+      if (p.closest("a, button, sup, abbr, script, style, select, option, .no-gloss, h1, label, .sources, .tooltip, svg")) return NodeFilter.FILTER_REJECT;
+      if (p.closest(".entry-body") && !p.closest(".entry.is-open")) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT; } });
+    const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+    for (const node of nodes) {
+      for (const t of terms) {
+        const key = t.toLowerCase(); if (present.has(key)) continue;
+        const re = new RegExp(`(^|[^A-Za-z-])(${t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})(s?)(?=[^A-Za-z-]|$)`, /[a-z]/.test(t) ? "i" : "");
+        const m = node.nodeValue.match(re); if (!m) continue;
+        const start = m.index + m[1].length, word = m[2] + m[3];
+        const after = node.splitText(start); after.nodeValue = after.nodeValue.slice(word.length);
+        const ab = document.createElement("abbr"); ab.className = "gloss"; ab.dataset.term = key; ab.tabIndex = 0; ab.textContent = word;
+        ab.dataset.tip = `<strong>${esc(t)}</strong>${esc(GLOSS[t])}`; node.parentNode.insertBefore(ab, after);
+        present.add(key); bindTips(ab.parentNode); break;
+      }
+    }
+  }
+
+  const LOGO = `<svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M3 27 C 14 26, 21 22, 24 4" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="4" r="2.6" fill="var(--accent)"/><path d="M3 27 H29" stroke="var(--border-strong)" stroke-width="1.5"/></svg>`;
+
+  function header({ page, title, tagline }) {
+    const el = document.getElementById("masthead"); if (!el) return;
+    const nav = NAV.map(([group, items], gi) => {
+      const cur = items.some(([h]) => h === page);
+      const links = items.map(([href, label, hint]) => `<a href="${href}"${href === page ? ' class="is-current" aria-current="page"' : ""}><span class="nl">${esc(label)}</span><span class="nh">${esc(hint)}</span></a>`).join("");
+      return `<div class="nav-group${cur ? " has-current" : ""}"><button type="button" class="nav-group-btn" aria-expanded="false" aria-controls="navm-${gi}">${esc(group)}<span class="caret" aria-hidden="true">▾</span></button><div class="nav-menu" id="navm-${gi}">${links}</div></div>`;
+    }).join("");
+    const curLabel = (PAGES.find(([h]) => h === page) || [, ""])[1];
+    el.innerHTML = `
+      <div class="masthead-title-row">
+        <h1><a href="index.html">${LOGO}Phase Transition</a></h1>
+        <a class="overview-link" href="overview.html">About this site</a>
+      </div>
+      <p class="mast-sub">What is AI actually discovering? How fast is it improving? What could go right, and what could go wrong? We check every claim against its source and grade how solid the evidence is. Updated daily.</p>
+      <div class="mast-meta" id="mast-meta">Last Update: —</div>
+      <nav class="site-nav" aria-label="Site"><button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-groups"><span aria-hidden="true">☰</span> Menu${curLabel ? `<span class="nav-here">· ${esc(curLabel)}</span>` : ""}</button><div class="nav-groups" id="nav-groups">${nav}</div><a class="sister" href="${LONGEVITY_URL}" target="_blank" rel="noopener">Longevity News ↗</a></nav>
+      ${title ? `<h2 class="page-title" style="margin-top:14px">${esc(title)}</h2>` : ""}
+      ${tagline ? `<p class="page-tagline">${tagline}</p>` : ""}
+      <div class="masthead-divider"></div>
+      <div class="disclaimer-banner" role="note"><span aria-hidden="true">⚠️</span><span><strong>Trust, but double-check.</strong> This site is put together by Claude, an AI made by Anthropic, from published sources, and it can make mistakes. When a company announces something, we treat it as a claim until outside experts confirm it. Every claim links to its source. Nothing here is financial, medical or career advice.</span></div>
+      <p class="conn-banner" id="conn-state" hidden></p>`;
+    wireNav(el);
+  }
+  function wireNav(root) {
+    const groups = [...root.querySelectorAll(".nav-group")];
+    const closeAll = except => groups.forEach(g => { if (g !== except) { g.classList.remove("open"); g.querySelector(".nav-group-btn").setAttribute("aria-expanded", "false"); } });
+    groups.forEach(g => { const b = g.querySelector(".nav-group-btn");
+      b.addEventListener("click", e => { e.stopPropagation(); const o = !g.classList.contains("open"); closeAll(g); g.classList.toggle("open", o); b.setAttribute("aria-expanded", o); }); });
+    document.addEventListener("click", e => { if (!e.target.closest(".nav-group")) closeAll(); });
+    document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
+    const t = root.querySelector(".nav-toggle"), box = root.querySelector(".nav-groups");
+    t.addEventListener("click", () => { const o = !box.classList.contains("open"); box.classList.toggle("open", o); t.setAttribute("aria-expanded", o); });
+  }
+
+  let sb = null;
+  function client() {
+    if (sb) return sb;
+    if (!window.supabase || !window.supabase.createClient) { connState("error", "Couldn't load the Supabase client library. Check your connection and reload."); return null; }
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); return sb;
+  }
+  function connState(status, msg) { const el = document.getElementById("conn-state"); if (!el) return; if (status === "ok") { el.hidden = true; return; } el.hidden = false; el.textContent = msg || ""; }
+  async function lastUpdate(extra = []) {
+    let run = null;
+    try { const { data } = await sb.from("phase_pipeline_runs").select("run_completed_at").order("run_completed_at", { ascending: false }).limit(1); run = data && data[0] ? data[0].run_completed_at : null; } catch {}
+    const ts = extra.concat([run]).filter(Boolean).map(t => new Date(t).getTime()).filter(t => !isNaN(t));
+    const el = document.getElementById("mast-meta"); if (el) el.textContent = ts.length ? `Last Update: ${fmtDateTime(new Date(Math.max(...ts)).toISOString())}` : "Last Update: —";
+  }
+
+  /* footnotes: cite(keysOrRefs) -> superscripts; renderSources() writes the numbered list */
+  let REFS = {}, CITES = new Map();
+  async function loadRefs() { try { const { data } = await sb.from("phase_references").select("key, citation, url, verified"); (data || []).forEach(r => REFS[r.key] = r); } catch {} }
+  function keysOf(x) {
+    if (!x) return [];
+    if (typeof x === "string") return [x];
+    if (Array.isArray(x)) return x.flatMap(r => typeof r === "string" ? [r] : r && r.type === "reference" && r.key ? [r.key] : []);
+    return [];
+  }
+  function cite(x) {
+    const keys = [...new Set(keysOf(x))]; if (!keys.length) return "";
+    const nums = keys.map(k => { if (!CITES.has(k)) CITES.set(k, CITES.size + 1); return CITES.get(k); });
+    return `<sup class="fn">${nums.map(n => `<a href="#src-${n}" title="Source ${n}">${n}</a>`).join(",")}</sup>`;
+  }
+  function resetCites() { CITES = new Map(); }
+  function renderSources() {
+    const el = document.getElementById("sources"); if (!el) return;
+    const entries = [...CITES.entries()].sort((a, b) => a[1] - b[1]);
+    if (!entries.length) { el.hidden = true; return; } el.hidden = false;
+    el.querySelector("ol").innerHTML = entries.map(([k, n]) => { const r = REFS[k];
+      const body = !r ? `<span class="unverified">Reference "${esc(k)}" not found</span>`
+        : `${esc(r.citation)} ${r.url && r.verified ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.url.replace(/^https?:\/\//, "").slice(0, 64))}${r.url.length > 72 ? "…" : ""} ↗</a>` : `<span class="unverified">link pending verification</span>`}`;
+      return `<li id="src-${n}">${body}</li>`; }).join("");
+    glossify(document.querySelector(".app"));
+  }
+  const SOURCES_HTML = `<section class="sources" id="sources" hidden><h2>Sources</h2><p>The little numbers on this page point here. Each one links to the study, filing or report the claim is based on, so you can check it yourself. Words with a dotted underline have a plain-English definition: hover over them or tap them.</p><ol></ol></section>`;
+
+  /* expandable entries */
+  function wireEntries(root = document) {
+    root.querySelectorAll(".entry").forEach(e => { const h = e.querySelector(".entry-head"); if (!h || h.dataset.wired) return; h.dataset.wired = "1";
+      h.addEventListener("click", () => { const o = e.classList.toggle("is-open"); h.setAttribute("aria-expanded", o); if (o) glossify(document.querySelector(".app")); }); });
+  }
+  function jumpToHash(prefix) {
+    if (!location.hash.startsWith("#" + prefix)) return;
+    const e = document.getElementById(location.hash.slice(1)); if (!e) return;
+    e.hidden = false; e.classList.add("is-open"); e.scrollIntoView({ behavior: "smooth", block: "start" }); e.classList.add("is-highlighted");
+  }
+
+  /* tooltip */
+  let tip = null;
+  function tooltip() { if (!tip) { tip = document.createElement("div"); tip.className = "tooltip"; tip.setAttribute("role", "status"); document.body.appendChild(tip); } return tip; }
+  function showTip(html, evt) { const t = tooltip(); t.innerHTML = html; t.style.display = "block"; const pad = 14; let x = evt.clientX + pad, y = evt.clientY + pad; const r = t.getBoundingClientRect(); if (x + r.width > innerWidth - 8) x = evt.clientX - r.width - pad; if (y + r.height > innerHeight - 8) y = evt.clientY - r.height - pad; t.style.left = x + "px"; t.style.top = y + "px"; }
+  function hideTip() { if (tip) tip.style.display = "none"; }
+  function bindTips(root) { root.querySelectorAll("[data-tip]").forEach(n => { n.addEventListener("mousemove", e => showTip(n.dataset.tip, e)); n.addEventListener("mouseleave", hideTip); n.addEventListener("focus", e => { const b = n.getBoundingClientRect(); showTip(n.dataset.tip, { clientX: b.right, clientY: b.top }); }); n.addEventListener("blur", hideTip); }); }
+
+  /* generic signal entry (Risk, Bubble, Curve pages) */
+  function signalEntry(s) {
+    const [dlabel, color] = dirInfo(s.track, s.direction);
+    return `<article class="entry" id="signal-${s.id}" data-id="${s.id}" data-category="${esc(s.category || "")}" data-direction="${esc(s.direction || "")}" data-search="${esc([s.title, s.summary, s.category, s.source_site].join(" ").toLowerCase())}" style="border-left-color:${color}">
+      <button class="entry-head" type="button" aria-expanded="false">
+        <div class="score-badge" title="${s.track === "upside" ? "How big a deal" : "How serious"}: ${s.severity ?? "–"} out of 5">${s.severity ?? "–"}<span>${s.track === "upside" ? "SIZE" : "LEVEL"}</span></div>
+        <div class="entry-main"><p class="entry-title">${esc(s.title)}</p><div class="badges">
+          ${s.date_found === todayISO() ? `<span class="badge new-badge">New</span>` : ""}
+          ${s.direction ? `<span class="badge" style="color:${color};border-color:currentColor;font-weight:600">${dlabel}</span>` : ""}
+          ${s.category ? `<span class="badge field">${esc(s.category)}</span>` : ""}
+          ${s.reality_tier ? `<span class="badge"><span class="dot" style="background:var(--tier-${s.reality_tier})"></span>Tier ${s.reality_tier} · ${TIER_LABEL[s.reality_tier]}</span>` : ""}
+          <span class="badge">${esc(s.source_site || "")}</span><span class="badge mono">${fmtDate(s.source_publish_date)}</span>
+        </div></div>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="entry-body"><div class="entry-body-inner"><div class="entry-body-content">
+        <p class="entry-summary">${esc(s.summary)}${cite(s.reference_key)}</p>
+        ${s.analogy ? `<p class="callout analogy"><strong>Think of it this way:</strong> ${esc(s.analogy)}</p>` : ""}
+        <ul class="entry-bullets">${bullets(s.bullet_points).map(b => `<li>${esc(b)}</li>`).join("")}</ul>
+        ${s.why_it_matters ? `<p class="callout"><strong>Why it matters:</strong> ${esc(s.why_it_matters)}</p>` : ""}
+        ${s.hype_check ? `<p class="callout hype"><strong>Reality check:</strong> ${esc(s.hype_check)}</p>` : ""}
+        ${s.counterpoint ? `<p class="callout counter"><strong>The other side:</strong> ${esc(s.counterpoint)}</p>` : ""}
+        ${s.conflict_note ? `<p class="entry-meta"><strong>Who has a stake:</strong> ${esc(s.conflict_note)}</p>` : ""}
+        <a class="entry-link" href="${esc(s.link)}" target="_blank" rel="noopener">Read source ↗</a>
+      </div></div></div></article>`;
+  }
+
+  /* boot helper */
+  async function boot(opts, fn) {
+    header(opts);
+    document.querySelector(".app").insertAdjacentHTML("beforeend", (opts.sources === false ? "" : SOURCES_HTML) + `<footer class="note">Reads live from Supabase. Sister sites: <a href="${LONGEVITY_URL}" target="_blank" rel="noopener">Longevity News</a> · <a href="https://richiebuchanan.github.io/SuretyMarketIntelligence/" target="_blank" rel="noopener">Surety Market Intelligence</a>.</footer>`);
+    connState("loading", "Connecting to Supabase…");
+    if (!client()) return;
+    await loadRefs();
+    try { await fn(sb); connState("ok"); glossify(document.querySelector(".app")); } catch (e) { connState("error", `Couldn't load data (${e.message || e}). Try reloading.`); console.error(e); }
+  }
+
+  window.PT = { esc, fmtDate, fmtMonth, fmtDateTime, bullets, todayISO, TIER_LABEL, DIR_LABEL, dirInfo, glossify, LONGEVITY_URL,
+    boot, lastUpdate, connState, cite, resetCites, renderSources, wireEntries, jumpToHash, showTip, hideTip, bindTips, signalEntry, get sb() { return sb; } };
+})();
+
+</script>
+<script>
+const { esc, fmtDate, fmtDateTime, bullets, todayISO, TIER_LABEL, cite } = PT;
+const VERDICTS = {
+  confirmed: { label: "Confirmed breakthrough", color: "var(--v-confirmed)", desc: "Strong evidence, and a game-changer for its field." },
+  solid:     { label: "Solid progress",         color: "var(--v-solid)",     desc: "Strong evidence, but a smaller step forward." },
+  bigif:     { label: "Big if true",            color: "var(--v-bigif)",     desc: "Could be huge, but nobody has confirmed it yet." },
+  early:     { label: "Early signal",           color: "var(--v-early)",     desc: "Not confirmed and smaller. Worth keeping an eye on." },
+};
+const MAG_LABEL = { 1: "Small step", 2: "Big step", 3: "Game-changer" };
+const verdictOf = r => { const solid = r.reality_tier <= 2, big = r.magnitude >= 3; return solid ? (big ? "confirmed" : "solid") : (big ? "bigif" : "early"); };
+let DATA = [], SIGNALS = [], SYN = null;
+const state = { search: "", verdict: "all", field: "all", tier: "all", lab: "all", sortBy: "added_desc" };
+
+function renderSignals() {
+  const card = document.getElementById("signals-card"); if (!SIGNALS.length) { card.hidden = true; return; } card.hidden = false;
+  const page = { acceleration: "curve.html", risk: "risk.html", bubble: "bubble.html", upside: "upside.html" };
+  document.getElementById("signals-list").innerHTML = SIGNALS.map(s => `
+    <div class="signal-row"><a class="track-pill track-${esc(s.track)}" href="${page[s.track]}" style="text-decoration:none">${s.track === "upside" ? "going right" : s.track === "risk" ? "risk" : esc(s.track)}</a>
+      <div><p class="signal-title"><a href="${page[s.track]}#signal-${s.id}">${esc(s.title)}</a></p>
+        <p class="signal-sum">${esc(s.summary)}${cite(s.reference_key)}</p>
+        <div class="signal-meta"><span>${esc(s.source_site)} · ${fmtDate(s.source_publish_date)}</span>${s.severity ? `<span class="sev" title="Severity ${s.severity}/5">${"●".repeat(s.severity)}${"○".repeat(5 - s.severity)}</span>` : ""}<span>${PT.dirInfo(s.track, s.direction)[0]}</span><span>Tier ${s.reality_tier} · ${TIER_LABEL[s.reality_tier]}</span></div>
+      </div></div>`).join("");
+}
+function renderSynthesis() {
+  const card = document.getElementById("analysis-card"); if (!SYN) { card.hidden = true; return; }
+  const a = SYN.analysis; card.hidden = false;
+  document.getElementById("analysis-title").textContent = `The last six weeks in brief (as of ${fmtDateTime(SYN.inserted_at)})`;
+  document.getElementById("analysis-meta").textContent = a.period_label || "";
+  document.getElementById("analysis-summary").innerHTML = (a.executive_summary || []).map(it => `${esc(it.text)}${cite(it.source_refs)}`).join(" ");
+  const li = items => (items || []).map(it => `<li>${it.label ? `<span class="item-label">${esc(it.label)}:</span>` : ""}${esc(it.text)}${cite(it.source_refs)}</li>`).join("");
+  document.getElementById("analysis-findings").innerHTML = li(a.key_findings);
+  document.getElementById("analysis-hype").innerHTML = li(a.hype_watch);
+}
+function renderLegend() {
+  document.getElementById("legend").innerHTML = Object.entries(VERDICTS).map(([k, v]) =>
+    `<div class="legend-cell" style="border-left-color:${v.color}"><strong>${v.label} <span style="color:var(--muted);font-weight:500">(${DATA.filter(r => verdictOf(r) === k).length})</span></strong>${v.desc}</div>`).join("");
+}
+function renderVerdictToggle() {
+  const el = document.getElementById("verdict-toggle");
+  const items = [["all", "All", DATA.length, null]].concat(Object.entries(VERDICTS).map(([k, v]) => [k, v.label, DATA.filter(r => verdictOf(r) === k).length, v.color]));
+  el.innerHTML = items.map(([k, l, c, col]) => `<button type="button" class="cat-btn ${k === state.verdict ? "is-active" : ""}" data-v="${k}" aria-pressed="${k === state.verdict}">${col ? `<span class="dot" style="background:${col}"></span>` : ""}${l} <span style="color:var(--muted)">${c}</span></button>`).join("");
+  el.querySelectorAll(".cat-btn").forEach(b => b.addEventListener("click", () => { state.verdict = b.dataset.v; el.querySelectorAll(".cat-btn").forEach(x => { x.classList.toggle("is-active", x === b); x.setAttribute("aria-pressed", x === b); }); applyFilters(); }));
+}
+function fillSelect(id, label, values, key, fmt) { document.getElementById(id).innerHTML = `<option value="all">${label}</option>` + values.map(v => `<option value="${esc(v)}"${String(v) === String(state[key]) ? " selected" : ""}>${esc(fmt ? fmt(v) : v)}</option>`).join(""); }
+function renderSelects() {
+  fillSelect("field-select", "All fields", [...new Set(DATA.map(r => r.field))].sort(), "field");
+  fillSelect("tier-select", "All reality tiers", [1, 2, 3, 4, 5], "tier", t => `Tier ${t}: ${TIER_LABEL[t]}`);
+  fillSelect("lab-select", "All labs & orgs", [...new Set(DATA.map(r => r.lab_or_org).filter(Boolean))].sort(), "lab");
+}
+function sorted() {
+  const by = { added_desc: (x, y) => (y.date_found || "").localeCompare(x.date_found || "") || (y.source_publish_date || "").localeCompare(x.source_publish_date || ""),
+    pub_desc: (x, y) => (y.source_publish_date || "").localeCompare(x.source_publish_date || ""),
+    signal: (x, y) => (y.relevance_score || 0) - (x.relevance_score || 0),
+    reality: (x, y) => x.reality_tier - y.reality_tier || y.magnitude - x.magnitude,
+    magnitude: (x, y) => y.magnitude - x.magnitude || x.reality_tier - y.reality_tier };
+  return [...DATA].sort(by[state.sortBy]);
+}
+function renderLedger() {
+  PT.resetCites(); renderSignals(); renderSynthesis();
+  const open = new Set([...document.querySelectorAll(".entry.is-open")].map(e => e.dataset.id)); const today = todayISO();
+  document.getElementById("ledger").innerHTML = sorted().map(r => { const v = verdictOf(r), V = VERDICTS[v];
+    return `<article class="entry${open.has(String(r.id)) ? " is-open" : ""}" id="discovery-${r.id}" data-id="${r.id}" data-verdict="${v}" data-field="${esc(r.field)}" data-tier="${r.reality_tier}" data-lab="${esc(r.lab_or_org || "")}" data-search="${esc([r.title, r.summary, r.lab_or_org, r.ai_system, r.field, (r.topic_tags || []).join(" ")].join(" ").toLowerCase())}" style="border-left-color:${V.color}">
+      <button class="entry-head" type="button" aria-expanded="${open.has(String(r.id))}">
+        <div class="score-badge" title="Signal ${r.relevance_score}/10">${r.relevance_score ?? "–"}<span>SIG</span></div>
+        <div class="entry-main"><p class="entry-title">${esc(r.title)}</p><div class="badges">
+          ${r.date_found === today ? `<span class="badge new-badge">New</span>` : ""}
+          <span class="badge verdict" style="background:${V.color}">${V.label}</span>
+          ${r.landmark ? `<span class="badge landmark">★ Landmark</span>` : ""}
+          <span class="badge field">${esc(r.field)}</span>
+          <span class="badge"><span class="dot" style="background:var(--tier-${r.reality_tier})"></span>Tier ${r.reality_tier} · ${TIER_LABEL[r.reality_tier]}</span>
+          <span class="badge">${MAG_LABEL[r.magnitude]}</span>
+          ${r.lab_or_org ? `<span class="badge">${esc(r.lab_or_org)}</span>` : ""}
+          ${r.longevity_article_id ? `<span class="badge landmark">Also on Longevity News</span>` : ""}
+          <span class="badge mono">Published ${fmtDate(r.source_publish_date)}</span>
+        </div></div>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="entry-body"><div class="entry-body-inner"><div class="entry-body-content">
+        ${r.score_rationale ? `<p class="rationale"><strong>Why this grade:</strong> ${esc(r.score_rationale)}</p>` : ""}
+        <p class="entry-summary">${esc(r.summary)}${cite(r.reference_key)}</p>
+        ${r.analogy ? `<p class="callout analogy"><strong>Think of it this way:</strong> ${esc(r.analogy)}</p>` : ""}
+        <ul class="entry-bullets">${bullets(r.bullet_points).map(b => `<li>${esc(b)}</li>`).join("")}</ul>
+        ${r.why_it_matters ? `<p class="callout"><strong>Why it matters:</strong> ${esc(r.why_it_matters)}</p>` : ""}
+        ${r.hype_check ? `<p class="callout hype"><strong>Reality check:</strong> ${esc(r.hype_check)}</p>` : ""}
+        <p class="entry-meta">${r.ai_system ? `<strong>AI system:</strong> ${esc(r.ai_system)} · ` : ""}<strong>Source:</strong> ${esc(r.source_site)} · <strong>Added</strong> ${fmtDate(r.date_found)}</p>
+        <a class="entry-link" href="${esc(r.link)}" target="_blank" rel="noopener">Read source ↗</a>
+        ${r.longevity_article_id ? `<a class="longevity-link" href="${PT.LONGEVITY_URL}index.html#article-${r.longevity_article_id}" target="_blank" rel="noopener">What it means for longevity: see the Longevity News entry ↗</a>` : ""}
+      </div></div></div></article>`; }).join("");
+  PT.wireEntries(); PT.renderSources();
+}
+function applyFilters() {
+  let n = 0;
+  document.querySelectorAll("#ledger .entry").forEach(e => {
+    const m = (state.verdict === "all" || e.dataset.verdict === state.verdict) && (state.field === "all" || e.dataset.field === state.field)
+      && (state.tier === "all" || e.dataset.tier === String(state.tier)) && (state.lab === "all" || e.dataset.lab === state.lab)
+      && (!state.search || e.dataset.search.includes(state.search));
+    e.hidden = !m; if (m) n++; });
+  document.getElementById("result-line").innerHTML = `Showing <strong>${n}</strong> of ${DATA.length} discoveries`;
+  document.getElementById("empty-state").hidden = n !== 0;
+}
+function renderAll() { renderLegend(); renderVerdictToggle(); renderSelects(); renderLedger(); applyFilters(); }
+function wire() {
+  const on = (id, ev, fn) => document.getElementById(id).addEventListener(ev, fn);
+  on("field-select", "change", e => { state.field = e.target.value; applyFilters(); });
+  on("tier-select", "change", e => { state.tier = e.target.value; applyFilters(); });
+  on("lab-select", "change", e => { state.lab = e.target.value; applyFilters(); });
+  on("search-input", "input", e => { state.search = e.target.value.trim().toLowerCase(); applyFilters(); });
+  on("sort-select", "change", e => { state.sortBy = e.target.value; renderLedger(); applyFilters(); });
+  on("reset-btn", "click", () => { Object.assign(state, { search: "", verdict: "all", field: "all", tier: "all", lab: "all", sortBy: "added_desc" }); document.getElementById("search-input").value = ""; document.getElementById("sort-select").value = "added_desc"; renderAll(); });
+}
+async function load(sb) {
+  const [d, s, y] = await Promise.all([
+    sb.from("phase_discoveries").select("*").order("date_found", { ascending: false }),
+    sb.from("phase_signals").select("*").order("source_publish_date", { ascending: false }).limit(4),
+    sb.from("phase_synthesis").select("analysis, inserted_at").order("inserted_at", { ascending: false }).limit(1) ]);
+  if (d.error) throw d.error;
+  DATA = (d.data || []).map(r => ({ ...r, reality_tier: +r.reality_tier, magnitude: +r.magnitude }));
+  SIGNALS = s.data || []; SYN = y.data && y.data[0] ? y.data[0] : null;
+  renderAll();
+  await PT.lastUpdate(DATA.map(r => r.inserted_at).concat(SIGNALS.map(x => x.inserted_at)));
+}
+PT.boot({ page: "discoveries.html", title: "Discovery Feed", tagline: "Real things AI has helped discover, in math, medicine, biology, history, physics and more, each graded on how solid the evidence is." }, async sb => {
+  wire(); await load(sb); PT.jumpToHash("discovery-");
+  setInterval(() => load(sb).catch(() => {}), 60000);
+});
+</script>
+</body>
+</html>

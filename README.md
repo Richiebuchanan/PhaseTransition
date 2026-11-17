@@ -11,7 +11,8 @@ AI-driven discovery, acceleration, risk and the AI bubble, graded on evidence. A
 ## Files
 | File | Page |
 |---|---|
-| `index.html` | Discovery Feed |
+| `index.html` | Start here (welcome page; old `#discovery-…` links redirect to the feed) |
+| `discoveries.html` | Discovery Feed |
 | `baseline.html` | State of the Frontier (versioned summary) |
 | `curve.html` | The Curve (forecast tracker, METR time horizons, acceleration signals) |
 | `upside.html` | What Could Go Right |
@@ -34,3 +35,7 @@ AI-driven discovery, acceleration, risk and the AI bubble, graded on evidence. A
 - Nav and footer link to Longevity News; About links to both sister sites.
 - `phase_discoveries.longevity_article_id` adds an "Also on Longevity News" badge and links to `LongevityNews/index.html#article-{id}`.
 - Suggested reverse link on Longevity News: add `<a class="sister" href="https://richiebuchanan.github.io/PhaseTransition/" target="_blank" rel="noopener">Phase Transition ↗</a>` to its nav.
+
+## Social sharing
+
+`build.py` adds Open Graph and Twitter card tags to every public page. Upload `og-image.png` (1200×630) to the repo root next to the HTML files so link previews on LinkedIn, Facebook and X show the card.

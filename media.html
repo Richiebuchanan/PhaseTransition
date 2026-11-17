@@ -4,6 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Podcasts &amp; Video — Phase Transition</title>
+<meta name="description" content="The best AI listening and watching, with notes on what holds up.">
+<link rel="canonical" href="https://richiebuchanan.github.io/PhaseTransition/media.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Phase Transition">
+<meta property="og:title" content="AI Podcasts &amp; Video, graded">
+<meta property="og:description" content="The best AI listening and watching, with notes on what holds up.">
+<meta property="og:url" content="https://richiebuchanan.github.io/PhaseTransition/media.html">
+<meta property="og:image" content="https://richiebuchanan.github.io/PhaseTransition/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Phase Transition: AI news without the hype or the panic. Discoveries, speed, upside, risks and the money, every claim sourced and graded.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI Podcasts &amp; Video, graded">
+<meta name="twitter:description" content="The best AI listening and watching, with notes on what holds up.">
+<meta name="twitter:image" content="https://richiebuchanan.github.io/PhaseTransition/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M3 27 C 14 26, 21 22, 24 4' fill='none' stroke='%235a3fd0' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='24' cy='4' r='2.6' fill='%235a3fd0'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -52,10 +68,26 @@ h1,h2,h3 { font-weight:700; text-wrap:balance; margin:0; } a { color:var(--link)
 .mast-sub { margin:10px 0 0; max-width:66ch; color:var(--ink-secondary); font-size:15px; }
 .mast-meta { margin-top:14px; font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12px; color:var(--muted); }
 .masthead-divider { border-top:1px solid var(--border); margin:16px 0; }
-.site-nav { display:flex; gap:6px 14px; margin-top:12px; font-size:13px; font-weight:600; flex-wrap:wrap; }
-.site-nav a { text-decoration:none; color:var(--ink-secondary); padding:4px 0; border-bottom:2px solid transparent; }
-.site-nav a:hover { color:var(--ink); } .site-nav a.is-current { color:var(--accent); border-bottom-color:var(--accent); }
-.site-nav a.sister { color:var(--muted); font-weight:500; margin-left:auto; }
+.site-nav { display:flex; align-items:center; gap:6px 6px; margin-top:12px; font-size:13px; font-weight:600; flex-wrap:wrap; position:relative; z-index:20; }
+.nav-toggle { display:none; }
+.nav-groups { display:flex; gap:4px; flex-wrap:wrap; }
+.nav-group { position:relative; }
+.nav-group-btn { all:unset; cursor:pointer; display:inline-flex; align-items:center; gap:5px; padding:6px 10px; border-radius:7px; color:var(--ink-secondary); border:1px solid transparent; }
+.nav-group-btn:hover, .nav-group.open .nav-group-btn { color:var(--ink); background:var(--surface); border-color:var(--border); }
+.nav-group-btn:focus-visible, .nav-toggle:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.nav-group.has-current .nav-group-btn { color:var(--accent); box-shadow:inset 0 -2px 0 var(--accent); border-radius:7px 7px 0 0; }
+.caret { font-size:10px; opacity:.7; }
+@media (prefers-reduced-motion:no-preference) { .caret { transition:transform 150ms ease; } }
+.nav-group.open .caret { transform:rotate(180deg); }
+.nav-menu { display:none; position:absolute; top:calc(100% + 6px); left:0; min-width:260px; background:var(--surface); border:1px solid var(--border-strong); border-radius:10px; box-shadow:var(--shadow-2); padding:6px; }
+.nav-group.open .nav-menu { display:block; }
+.nav-menu a { display:block; text-decoration:none; padding:8px 10px; border-radius:7px; color:var(--ink); }
+.nav-menu a:hover, .nav-menu a:focus-visible { background:var(--accent-wash); outline:none; }
+.nav-menu a.is-current { background:var(--accent-wash); }
+.nav-menu a.is-current .nl { color:var(--accent); }
+.nav-menu .nl { display:block; font-weight:600; font-size:13.5px; }
+.nav-menu .nh { display:block; font-weight:400; font-size:12px; color:var(--muted); margin-top:1px; }
+.site-nav a.sister { color:var(--muted); font-weight:500; margin-left:auto; text-decoration:none; padding:6px 0; }
 .page-title { font-size:20px; margin:4px 0 0; }
 .page-tagline { margin:6px 0 0; font-size:13px; color:var(--muted); max-width:72ch; }
 .masthead-title-row { display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; }
@@ -161,7 +193,17 @@ sup.fn { font-size:10px; line-height:0; margin-left:2px; white-space:nowrap; } s
 
 @media (max-width:768px) {
   .app { padding:16px 12px 50px; } * { min-width:0; } .masthead h1 { font-size:26px; } .mast-sub { font-size:13px; }
-  .site-nav a.sister { margin-left:0; }
+  .nav-toggle { all:unset; cursor:pointer; display:inline-flex; align-items:center; gap:8px; padding:9px 14px; border:1px solid var(--border-strong); border-radius:8px; background:var(--surface); color:var(--ink); font-weight:700; min-height:24px; }
+  .nav-here { font-weight:500; color:var(--accent); }
+  .site-nav { flex-direction:column; align-items:stretch; }
+  .nav-groups { display:none; flex-direction:column; gap:4px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:8px; box-shadow:var(--shadow-1); }
+  .nav-groups.open { display:flex; }
+  .nav-group-btn { cursor:default; pointer-events:none; padding:8px 8px 2px; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); background:none !important; border-color:transparent !important; box-shadow:none !important; }
+  .nav-group.has-current .nav-group-btn { color:var(--muted); }
+  .caret { display:none; }
+  .nav-menu { display:block; position:static; box-shadow:none; border:none; padding:0; min-width:0; background:none; }
+  .nav-menu a { padding:9px 10px; }
+  .site-nav a.sister { margin-left:0; padding:4px 2px; }
   .filter-bar { position:static; flex-direction:column; align-items:stretch; padding:10px; gap:10px; } .filter-bar > * { width:100%; flex:1 1 100%; }
   .cat-btn { flex:1 1 auto; justify-content:center; padding:8px 9px; } select { width:100%; padding:9px; font-size:13px; }
   .entry-head { grid-template-columns:28px 1fr 18px; gap:10px; padding:11px 12px; } .score-badge { width:28px; height:28px; font-size:11px; } .score-badge span { font-size:6.5px; }
@@ -195,18 +237,13 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
   const SUPABASE_ANON_KEY = "sb_publishable_2n567u9zKgZ-L-M_yGRf5Q_HEV_p1-f";
   const LONGEVITY_URL = "https://richiebuchanan.github.io/LongevityNews/";
 
-  const PAGES = [
-    ["baseline.html", "State of the Frontier"],
-    ["storyline.html", "Timeline"],
-    ["timeline.html", "The Record"],
-    ["index.html", "Discovery Feed"],
-    ["curve.html", "The Curve"],
-    ["upside.html", "What Could Go Right"],
-    ["risk.html", "What Could Go Wrong"],
-    ["bubble.html", "Bubble Watch"],
-    ["voices.html", "Voices & Players"],
-    ["media.html", "Podcasts & Video"],
+  const NAV = [
+    ["Start here", [["index.html", "Start here", "New? Begin with the two-minute tour"], ["storyline.html", "Timeline", "Every major story since Jan 2023, at a glance"], ["baseline.html", "State of the Frontier", "Where things stand today"]]],
+    ["What's happening", [["discoveries.html", "Discovery Feed", "Real things AI helped discover, graded"], ["curve.html", "The Curve", "How fast AI is getting better"], ["timeline.html", "The Record", "The full history, month by month"]]],
+    ["Good & bad", [["upside.html", "What Could Go Right", "Cures, science, everyday help"], ["risk.html", "What Could Go Wrong", "Harms, misuse, loss of control"], ["bubble.html", "Bubble Watch", "Is the money getting ahead of reality?"]]],
+    ["People & media", [["voices.html", "Voices & Players", "Who's who: people and companies"], ["media.html", "Podcasts & Video", "The best listening and watching"]]],
   ];
+  const PAGES = NAV.flatMap(g => g[1]);
 
   const esc = s => String(s ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
   const fmtDate = iso => { if (!iso) return "—"; const d = new Date(iso + (iso.length === 10 ? "T00:00:00" : "")); return isNaN(d) ? iso : d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }); };
@@ -288,7 +325,12 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
 
   function header({ page, title, tagline }) {
     const el = document.getElementById("masthead"); if (!el) return;
-    const nav = PAGES.map(([href, label]) => `<a href="${href}"${href === page ? ' class="is-current" aria-current="page"' : ""}>${esc(label)}</a>`).join("");
+    const nav = NAV.map(([group, items], gi) => {
+      const cur = items.some(([h]) => h === page);
+      const links = items.map(([href, label, hint]) => `<a href="${href}"${href === page ? ' class="is-current" aria-current="page"' : ""}><span class="nl">${esc(label)}</span><span class="nh">${esc(hint)}</span></a>`).join("");
+      return `<div class="nav-group${cur ? " has-current" : ""}"><button type="button" class="nav-group-btn" aria-expanded="false" aria-controls="navm-${gi}">${esc(group)}<span class="caret" aria-hidden="true">▾</span></button><div class="nav-menu" id="navm-${gi}">${links}</div></div>`;
+    }).join("");
+    const curLabel = (PAGES.find(([h]) => h === page) || [, ""])[1];
     el.innerHTML = `
       <div class="masthead-title-row">
         <h1><a href="index.html">${LOGO}Phase Transition</a></h1>
@@ -296,12 +338,23 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
       </div>
       <p class="mast-sub">What is AI actually discovering? How fast is it improving? What could go right, and what could go wrong? We check every claim against its source and grade how solid the evidence is. Updated daily.</p>
       <div class="mast-meta" id="mast-meta">Last Update: —</div>
-      <nav class="site-nav" aria-label="Site">${nav}<a class="sister" href="${LONGEVITY_URL}" target="_blank" rel="noopener">Longevity News ↗</a></nav>
+      <nav class="site-nav" aria-label="Site"><button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-groups"><span aria-hidden="true">☰</span> Menu${curLabel ? `<span class="nav-here">· ${esc(curLabel)}</span>` : ""}</button><div class="nav-groups" id="nav-groups">${nav}</div><a class="sister" href="${LONGEVITY_URL}" target="_blank" rel="noopener">Longevity News ↗</a></nav>
       ${title ? `<h2 class="page-title" style="margin-top:14px">${esc(title)}</h2>` : ""}
       ${tagline ? `<p class="page-tagline">${tagline}</p>` : ""}
       <div class="masthead-divider"></div>
       <div class="disclaimer-banner" role="note"><span aria-hidden="true">⚠️</span><span><strong>Trust, but double-check.</strong> This site is put together by Claude, an AI made by Anthropic, from published sources, and it can make mistakes. When a company announces something, we treat it as a claim until outside experts confirm it. Every claim links to its source. Nothing here is financial, medical or career advice.</span></div>
       <p class="conn-banner" id="conn-state" hidden></p>`;
+    wireNav(el);
+  }
+  function wireNav(root) {
+    const groups = [...root.querySelectorAll(".nav-group")];
+    const closeAll = except => groups.forEach(g => { if (g !== except) { g.classList.remove("open"); g.querySelector(".nav-group-btn").setAttribute("aria-expanded", "false"); } });
+    groups.forEach(g => { const b = g.querySelector(".nav-group-btn");
+      b.addEventListener("click", e => { e.stopPropagation(); const o = !g.classList.contains("open"); closeAll(g); g.classList.toggle("open", o); b.setAttribute("aria-expanded", o); }); });
+    document.addEventListener("click", e => { if (!e.target.closest(".nav-group")) closeAll(); });
+    document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
+    const t = root.querySelector(".nav-toggle"), box = root.querySelector(".nav-groups");
+    t.addEventListener("click", () => { const o = !box.classList.contains("open"); box.classList.toggle("open", o); t.setAttribute("aria-expanded", o); });
   }
 
   let sb = null;

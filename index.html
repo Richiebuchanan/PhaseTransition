@@ -3,7 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Discovery Feed — Phase Transition</title>
+<title>Phase Transition — AI news without the hype or the panic</title>
+<meta name="description" content="A plain-English tracker of what AI is really discovering, how fast it&#x27;s improving, what could go right, what could go wrong, and whether it&#x27;s a bubble. Every claim sourced and graded.">
+<link rel="canonical" href="https://richiebuchanan.github.io/PhaseTransition/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Phase Transition">
+<meta property="og:title" content="Phase Transition: AI news without the hype or the panic">
+<meta property="og:description" content="A plain-English tracker of what AI is really discovering, how fast it&#x27;s improving, what could go right, what could go wrong, and whether it&#x27;s a bubble. Every claim sourced and graded.">
+<meta property="og:url" content="https://richiebuchanan.github.io/PhaseTransition/">
+<meta property="og:image" content="https://richiebuchanan.github.io/PhaseTransition/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Phase Transition: AI news without the hype or the panic. Discoveries, speed, upside, risks and the money, every claim sourced and graded.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Phase Transition: AI news without the hype or the panic">
+<meta name="twitter:description" content="A plain-English tracker of what AI is really discovering, how fast it&#x27;s improving, what could go right, what could go wrong, and whether it&#x27;s a bubble. Every claim sourced and graded.">
+<meta name="twitter:image" content="https://richiebuchanan.github.io/PhaseTransition/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M3 27 C 14 26, 21 22, 24 4' fill='none' stroke='%235a3fd0' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='24' cy='4' r='2.6' fill='%235a3fd0'/%3E%3C/svg%3E">
+<script>/* old links to the Discovery Feed used index.html#discovery-… */ if (/^#(discovery|signal)-/.test(location.hash)) location.replace("discoveries.html" + location.hash);</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -52,10 +69,26 @@ h1,h2,h3 { font-weight:700; text-wrap:balance; margin:0; } a { color:var(--link)
 .mast-sub { margin:10px 0 0; max-width:66ch; color:var(--ink-secondary); font-size:15px; }
 .mast-meta { margin-top:14px; font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12px; color:var(--muted); }
 .masthead-divider { border-top:1px solid var(--border); margin:16px 0; }
-.site-nav { display:flex; gap:6px 14px; margin-top:12px; font-size:13px; font-weight:600; flex-wrap:wrap; }
-.site-nav a { text-decoration:none; color:var(--ink-secondary); padding:4px 0; border-bottom:2px solid transparent; }
-.site-nav a:hover { color:var(--ink); } .site-nav a.is-current { color:var(--accent); border-bottom-color:var(--accent); }
-.site-nav a.sister { color:var(--muted); font-weight:500; margin-left:auto; }
+.site-nav { display:flex; align-items:center; gap:6px 6px; margin-top:12px; font-size:13px; font-weight:600; flex-wrap:wrap; position:relative; z-index:20; }
+.nav-toggle { display:none; }
+.nav-groups { display:flex; gap:4px; flex-wrap:wrap; }
+.nav-group { position:relative; }
+.nav-group-btn { all:unset; cursor:pointer; display:inline-flex; align-items:center; gap:5px; padding:6px 10px; border-radius:7px; color:var(--ink-secondary); border:1px solid transparent; }
+.nav-group-btn:hover, .nav-group.open .nav-group-btn { color:var(--ink); background:var(--surface); border-color:var(--border); }
+.nav-group-btn:focus-visible, .nav-toggle:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.nav-group.has-current .nav-group-btn { color:var(--accent); box-shadow:inset 0 -2px 0 var(--accent); border-radius:7px 7px 0 0; }
+.caret { font-size:10px; opacity:.7; }
+@media (prefers-reduced-motion:no-preference) { .caret { transition:transform 150ms ease; } }
+.nav-group.open .caret { transform:rotate(180deg); }
+.nav-menu { display:none; position:absolute; top:calc(100% + 6px); left:0; min-width:260px; background:var(--surface); border:1px solid var(--border-strong); border-radius:10px; box-shadow:var(--shadow-2); padding:6px; }
+.nav-group.open .nav-menu { display:block; }
+.nav-menu a { display:block; text-decoration:none; padding:8px 10px; border-radius:7px; color:var(--ink); }
+.nav-menu a:hover, .nav-menu a:focus-visible { background:var(--accent-wash); outline:none; }
+.nav-menu a.is-current { background:var(--accent-wash); }
+.nav-menu a.is-current .nl { color:var(--accent); }
+.nav-menu .nl { display:block; font-weight:600; font-size:13.5px; }
+.nav-menu .nh { display:block; font-weight:400; font-size:12px; color:var(--muted); margin-top:1px; }
+.site-nav a.sister { color:var(--muted); font-weight:500; margin-left:auto; text-decoration:none; padding:6px 0; }
 .page-title { font-size:20px; margin:4px 0 0; }
 .page-tagline { margin:6px 0 0; font-size:13px; color:var(--muted); max-width:72ch; }
 .masthead-title-row { display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; }
@@ -161,7 +194,17 @@ sup.fn { font-size:10px; line-height:0; margin-left:2px; white-space:nowrap; } s
 
 @media (max-width:768px) {
   .app { padding:16px 12px 50px; } * { min-width:0; } .masthead h1 { font-size:26px; } .mast-sub { font-size:13px; }
-  .site-nav a.sister { margin-left:0; }
+  .nav-toggle { all:unset; cursor:pointer; display:inline-flex; align-items:center; gap:8px; padding:9px 14px; border:1px solid var(--border-strong); border-radius:8px; background:var(--surface); color:var(--ink); font-weight:700; min-height:24px; }
+  .nav-here { font-weight:500; color:var(--accent); }
+  .site-nav { flex-direction:column; align-items:stretch; }
+  .nav-groups { display:none; flex-direction:column; gap:4px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:8px; box-shadow:var(--shadow-1); }
+  .nav-groups.open { display:flex; }
+  .nav-group-btn { cursor:default; pointer-events:none; padding:8px 8px 2px; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); background:none !important; border-color:transparent !important; box-shadow:none !important; }
+  .nav-group.has-current .nav-group-btn { color:var(--muted); }
+  .caret { display:none; }
+  .nav-menu { display:block; position:static; box-shadow:none; border:none; padding:0; min-width:0; background:none; }
+  .nav-menu a { padding:9px 10px; }
+  .site-nav a.sister { margin-left:0; padding:4px 2px; }
   .filter-bar { position:static; flex-direction:column; align-items:stretch; padding:10px; gap:10px; } .filter-bar > * { width:100%; flex:1 1 100%; }
   .cat-btn { flex:1 1 auto; justify-content:center; padding:8px 9px; } select { width:100%; padding:9px; font-size:13px; }
   .entry-head { grid-template-columns:28px 1fr 18px; gap:10px; padding:11px 12px; } .score-badge { width:28px; height:28px; font-size:11px; } .score-badge span { font-size:6.5px; }
@@ -177,54 +220,85 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
 
 </style>
 <style>
-  .signal-row { display:grid; grid-template-columns:110px 1fr; gap:12px; padding:10px 0; border-top:1px solid var(--border); }
-  .signal-row:first-of-type { border-top:none; } .signal-row .track-pill { align-self:start; }
-  .signal-title { font-weight:600; font-size:13.5px; margin:0 0 3px; } .signal-title a { color:var(--ink); text-decoration:none; } .signal-title a:hover { text-decoration:underline; }
-  .signal-sum { font-size:12.5px; color:var(--ink-secondary); margin:0 0 4px; max-width:78ch; }
-  .signal-meta { font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--muted); display:flex; gap:10px; flex-wrap:wrap; }
-  .legend { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:0 0 12px; }
-  .legend-cell { background:var(--surface); border:1px solid var(--border); border-left:4px solid; border-radius:8px; padding:9px 12px; font-size:12px; color:var(--ink-secondary); }
-  .legend-cell strong { display:block; font-size:13px; color:var(--ink); margin-bottom:2px; }
-  .longevity-link { display:inline-flex; gap:6px; align-items:center; font-size:12.5px; font-weight:600; color:var(--ok); text-decoration:none; }
-  .longevity-link:hover { text-decoration:underline; }
-  @media (max-width:768px) { .legend { grid-template-columns:1fr; } .signal-row { grid-template-columns:1fr; gap:6px; } .signal-row .track-pill { justify-self:start; } }
+  .hero { padding:22px 24px; }
+  .hero h2 { font-size:clamp(20px,2.6vw,26px); letter-spacing:-0.01em; margin:0 0 10px; max-width:42ch; }
+  .hero p { font-size:15px; color:var(--ink-secondary); margin:0 0 12px; max-width:68ch; }
+  .hero .cta { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+  .btn { display:inline-flex; align-items:center; gap:6px; padding:10px 16px; border-radius:8px; font-weight:700; font-size:14px; text-decoration:none; border:1px solid var(--border-strong); color:var(--ink); background:var(--surface); }
+  .btn.primary { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .btn:hover { filter:brightness(1.05); } .btn:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .h-sec { font-size:17px; margin:28px 2px 4px; } .h-sub { font-size:13px; color:var(--muted); margin:0 2px 12px; max-width:72ch; }
+  .q-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px; }
+  .q { display:block; text-decoration:none; color:inherit; background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--c, var(--accent)); border-radius:10px; padding:13px 15px; box-shadow:var(--shadow-1); }
+  .q:hover { border-color:var(--border-strong); border-left-color:var(--c, var(--accent)); box-shadow:var(--shadow-2); }
+  .q:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .q strong { display:block; font-size:14.5px; margin-bottom:3px; } .q span { display:block; font-size:12.5px; color:var(--ink-secondary); } .q em { display:block; font-style:normal; font-size:12px; font-weight:700; color:var(--link); margin-top:8px; }
+  .grades { display:grid; gap:6px; margin:10px 0 0; }
+  .grade { display:grid; grid-template-columns:28px 170px 1fr; gap:10px; align-items:center; font-size:13px; }
+  .grade .n { width:26px; height:26px; border-radius:50%; display:grid; place-items:center; color:#fff; font-weight:700; font-size:12px; font-family:"IBM Plex Mono",monospace; }
+  .grade b { font-size:13px; } .grade span:not(.n) { color:var(--ink-secondary); }
+  .lm { display:grid; grid-template-columns:110px 1fr; gap:12px; padding:10px 0; border-top:1px solid var(--border); }
+  .lm:first-child { border-top:none; } .lm .d { font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--muted); padding-top:2px; }
+  .lm a { font-weight:600; font-size:14px; color:var(--ink); text-decoration:none; } .lm a:hover { text-decoration:underline; }
+  .lm p { margin:3px 0 0; font-size:12.5px; color:var(--ink-secondary); }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .disclose p { font-size:13.5px; color:var(--ink-secondary); margin:0 0 10px; max-width:72ch; }
+  @media (max-width:768px) { .two { grid-template-columns:1fr; } .grade { grid-template-columns:26px 1fr; row-gap:0; } .grade span:not(.n) { grid-column:2; } .grade .n { grid-row:span 2; align-self:start; } .lm { grid-template-columns:1fr; gap:2px; } .hero { padding:18px; } .hero .cta .btn { flex:1 1 100%; justify-content:center; } }
 </style>
 </head>
 <body>
 <div class="app">
   <header class="masthead" id="masthead"></header>
 
-  <section class="card" id="signals-card" hidden>
-    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px"><h2>Latest from the frontier</h2><span class="note">The newest news on speed, the upside, the risks and the money. <a href="baseline.html">See the big picture →</a></span></div>
-    <div id="signals-list" style="margin-top:8px"></div>
+  <section class="card hero">
+    <h2>AI is moving fast. This site helps you keep up, calmly.</h2>
+    <p>Every week brings a new AI headline: a breakthrough, a warning, a record-breaking deal. It's hard to tell what's real, what's hype and what actually matters. Phase Transition collects the evidence in one place, explains it in plain English, and grades how solid each claim is.</p>
+    <p>It isn't here to cheer AI on or to scare you. The good news and the bad news get equal space, and you can check every claim against its source.</p>
+    <div class="cta"><a class="btn primary" href="storyline.html">See the story since 2023 →</a><a class="btn" href="baseline.html">Where things stand today</a></div>
   </section>
 
-  <section class="card" id="analysis-card" hidden>
-    <h2 id="analysis-title">The last six weeks in brief</h2>
-    <p class="sub mono" id="analysis-meta"></p>
-    <div class="analysis-section"><h3>In short</h3><p id="analysis-summary"></p></div>
-    <div class="analysis-section"><h3>What stood out</h3><ul class="arrow-list" id="analysis-findings"></ul></div>
-    <div class="analysis-section"><h3>Reality check: where headlines went too far</h3><ul class="arrow-list hype" id="analysis-hype"></ul></div>
-  </section>
+  <div class="stat-grid" id="counts"></div>
 
-  <div class="section-head"><h2>How we grade each discovery</h2><p>Two separate questions: Is it real? And how big a deal is it?</p></div>
-  <div class="legend" id="legend"></div>
-  <p class="note" style="margin:0 2px 14px"><strong>How solid is it?</strong> Tier 1 = confirmed by independent experts more than once · 2 = checked by outside experts or tested in a fair trial · 3 = an early report not yet reviewed · 4 = a company or university says so · 5 = someone's claim or opinion. <strong>How big?</strong> A small step, a big step, or a game-changer for its field. <strong>Signal</strong> (1–10) is how much it should change your sense of where AI is heading. Think of it like a weather report: tier is how sure the forecaster is, size is how big the storm would be.</p>
-
-  <div class="filter-bar" role="search">
-    <div class="search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input id="search-input" type="text" placeholder="Search title, summary, lab, AI system…" autocomplete="off" aria-label="Search discoveries"></div>
-    <div class="cat-toggle" id="verdict-toggle" role="group" aria-label="Filter by verdict"></div>
-    <select id="field-select" aria-label="Field"></select>
-    <select id="tier-select" aria-label="Reality tier"></select>
-    <select id="lab-select" aria-label="Lab or organization"></select>
-    <select id="sort-select" aria-label="Sort">
-      <option value="added_desc" selected>Sort: newest added</option><option value="pub_desc">Sort: newest published</option><option value="signal">Sort: signal, high to low</option><option value="reality">Sort: most solid first</option><option value="magnitude">Sort: biggest first</option>
-    </select>
-    <button class="reset-btn" id="reset-btn" type="button">Reset</button>
+  <h2 class="h-sec">What do you want to know?</h2>
+  <p class="h-sub">Pick a question. Each one leads to a page that answers it with sources.</p>
+  <div class="q-grid">
+    <a class="q" href="storyline.html" style="--c:var(--accel)"><strong>What's happened so far?</strong><span>Every major AI story since January 2023 on one scrollable timeline, one line each.</span><em>Timeline →</em></a>
+    <a class="q" href="baseline.html" style="--c:var(--accel)"><strong>Where do things stand right now?</strong><span>A one-page summary of the big questions and what the evidence says today.</span><em>State of the Frontier →</em></a>
+    <a class="q" href="discoveries.html" style="--c:var(--v-solid)"><strong>Is AI actually discovering anything?</strong><span>Real findings in medicine, math, biology and more, each graded on how solid it is.</span><em>Discovery Feed →</em></a>
+    <a class="q" href="curve.html" style="--c:var(--accel)"><strong>How fast is it getting better?</strong><span>Test scores, how long AI can work on its own, and when experts think it will match us.</span><em>The Curve →</em></a>
+    <a class="q" href="upside.html" style="--c:var(--ok)"><strong>What good could it do?</strong><span>New medicines, faster science and everyday help: what's real so far and what's only promised.</span><em>What Could Go Right →</em></a>
+    <a class="q" href="risk.html" style="--c:var(--risk)"><strong>What could go wrong?</strong><span>Scams, job losses, misuse and loss of control: what's already happening and what's still a worry.</span><em>What Could Go Wrong →</em></a>
+    <a class="q" href="bubble.html" style="--c:var(--bubble)"><strong>Is all this money a bubble?</strong><span>The spending, the warning signs and the reasons it might hold up.</span><em>Bubble Watch →</em></a>
+    <a class="q" href="voices.html" style="--c:var(--flat)"><strong>Who are the key players?</strong><span>The people and companies shaping AI, what they predict, and what they have at stake.</span><em>Voices &amp; Players →</em></a>
   </div>
-  <p class="result-line" id="result-line"></p>
-  <div class="ledger" id="ledger"></div>
-  <p class="empty-state" id="empty-state" hidden>No discoveries match these filters.</p>
+
+  <div class="two" style="margin-top:28px">
+    <section class="card" style="margin:0">
+      <h2>How to read the grades</h2>
+      <p class="sub" style="margin-bottom:6px">Think of a weather report. One number says how sure the forecaster is. Another says how big the storm would be. We grade every item both ways, so a huge claim with weak evidence is labeled "big if true," not "breakthrough."</p>
+      <div class="grades">
+        <div class="grade"><span class="n" style="background:var(--tier-1)">1</span><b>Confirmed</b><span>Checked by outside experts and repeated.</span></div>
+        <div class="grade"><span class="n" style="background:var(--tier-2)">2</span><b>Checked by experts</b><span>Peer-reviewed, a fair trial, an official filing, or a confirmed event.</span></div>
+        <div class="grade"><span class="n" style="background:var(--tier-3)">3</span><b>Early report</b><span>Public, but not yet reviewed by outsiders.</span></div>
+        <div class="grade"><span class="n" style="background:var(--tier-4)">4</span><b>Company says</b><span>An announcement or demo from the people who made it.</span></div>
+        <div class="grade"><span class="n" style="background:var(--tier-5)">5</span><b>Opinion or claim</b><span>A post, an interview, or a video without sources.</span></div>
+      </div>
+      <p class="note" style="margin:12px 0 0">The small numbers next to sentences are footnotes. Tap one to see the source. Words with a dotted underline have a plain-English explanation.</p>
+    </section>
+    <section class="card" style="margin:0">
+      <h2>Recent turning points</h2>
+      <p class="sub" style="margin-bottom:4px">The latest events we've marked as landmarks.</p>
+      <div id="landmarks"><p class="note">Loading…</p></div>
+      <p style="margin:10px 0 0"><a href="storyline.html" style="font-size:13px;font-weight:700;text-decoration:none">See the whole timeline →</a></p>
+    </section>
+  </div>
+
+  <section class="card disclose" style="margin-top:18px">
+    <h2>Who made this, and why</h2>
+    <p>Phase Transition is a hobby project by Richie Buchanan, a data analyst in Tennessee, built with Claude, an AI made by Anthropic. The goal is simple: make the speed of AI news easier to follow and judge, for people who don't work in tech.</p>
+    <p>Claude gathers and writes up the material, and a daily automatic check adds new items. Anthropic is one of the companies tracked here, so it's graded by the same rules as everyone else. AI can make mistakes even when it cites sources, so please check the sources before relying on anything. Nothing here is financial, medical, legal or career advice.</p>
+    <p style="margin:0"><a href="overview.html" style="font-weight:700;text-decoration:none">More about how the site works →</a></p>
+  </section>
 </div>
 <script>
 /* Phase Transition — shared client: Supabase, masthead/nav, footnotes, formatting, tooltip. */
@@ -233,18 +307,13 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
   const SUPABASE_ANON_KEY = "sb_publishable_2n567u9zKgZ-L-M_yGRf5Q_HEV_p1-f";
   const LONGEVITY_URL = "https://richiebuchanan.github.io/LongevityNews/";
 
-  const PAGES = [
-    ["baseline.html", "State of the Frontier"],
-    ["storyline.html", "Timeline"],
-    ["timeline.html", "The Record"],
-    ["index.html", "Discovery Feed"],
-    ["curve.html", "The Curve"],
-    ["upside.html", "What Could Go Right"],
-    ["risk.html", "What Could Go Wrong"],
-    ["bubble.html", "Bubble Watch"],
-    ["voices.html", "Voices & Players"],
-    ["media.html", "Podcasts & Video"],
+  const NAV = [
+    ["Start here", [["index.html", "Start here", "New? Begin with the two-minute tour"], ["storyline.html", "Timeline", "Every major story since Jan 2023, at a glance"], ["baseline.html", "State of the Frontier", "Where things stand today"]]],
+    ["What's happening", [["discoveries.html", "Discovery Feed", "Real things AI helped discover, graded"], ["curve.html", "The Curve", "How fast AI is getting better"], ["timeline.html", "The Record", "The full history, month by month"]]],
+    ["Good & bad", [["upside.html", "What Could Go Right", "Cures, science, everyday help"], ["risk.html", "What Could Go Wrong", "Harms, misuse, loss of control"], ["bubble.html", "Bubble Watch", "Is the money getting ahead of reality?"]]],
+    ["People & media", [["voices.html", "Voices & Players", "Who's who: people and companies"], ["media.html", "Podcasts & Video", "The best listening and watching"]]],
   ];
+  const PAGES = NAV.flatMap(g => g[1]);
 
   const esc = s => String(s ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
   const fmtDate = iso => { if (!iso) return "—"; const d = new Date(iso + (iso.length === 10 ? "T00:00:00" : "")); return isNaN(d) ? iso : d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }); };
@@ -326,7 +395,12 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
 
   function header({ page, title, tagline }) {
     const el = document.getElementById("masthead"); if (!el) return;
-    const nav = PAGES.map(([href, label]) => `<a href="${href}"${href === page ? ' class="is-current" aria-current="page"' : ""}>${esc(label)}</a>`).join("");
+    const nav = NAV.map(([group, items], gi) => {
+      const cur = items.some(([h]) => h === page);
+      const links = items.map(([href, label, hint]) => `<a href="${href}"${href === page ? ' class="is-current" aria-current="page"' : ""}><span class="nl">${esc(label)}</span><span class="nh">${esc(hint)}</span></a>`).join("");
+      return `<div class="nav-group${cur ? " has-current" : ""}"><button type="button" class="nav-group-btn" aria-expanded="false" aria-controls="navm-${gi}">${esc(group)}<span class="caret" aria-hidden="true">▾</span></button><div class="nav-menu" id="navm-${gi}">${links}</div></div>`;
+    }).join("");
+    const curLabel = (PAGES.find(([h]) => h === page) || [, ""])[1];
     el.innerHTML = `
       <div class="masthead-title-row">
         <h1><a href="index.html">${LOGO}Phase Transition</a></h1>
@@ -334,12 +408,23 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
       </div>
       <p class="mast-sub">What is AI actually discovering? How fast is it improving? What could go right, and what could go wrong? We check every claim against its source and grade how solid the evidence is. Updated daily.</p>
       <div class="mast-meta" id="mast-meta">Last Update: —</div>
-      <nav class="site-nav" aria-label="Site">${nav}<a class="sister" href="${LONGEVITY_URL}" target="_blank" rel="noopener">Longevity News ↗</a></nav>
+      <nav class="site-nav" aria-label="Site"><button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-groups"><span aria-hidden="true">☰</span> Menu${curLabel ? `<span class="nav-here">· ${esc(curLabel)}</span>` : ""}</button><div class="nav-groups" id="nav-groups">${nav}</div><a class="sister" href="${LONGEVITY_URL}" target="_blank" rel="noopener">Longevity News ↗</a></nav>
       ${title ? `<h2 class="page-title" style="margin-top:14px">${esc(title)}</h2>` : ""}
       ${tagline ? `<p class="page-tagline">${tagline}</p>` : ""}
       <div class="masthead-divider"></div>
       <div class="disclaimer-banner" role="note"><span aria-hidden="true">⚠️</span><span><strong>Trust, but double-check.</strong> This site is put together by Claude, an AI made by Anthropic, from published sources, and it can make mistakes. When a company announces something, we treat it as a claim until outside experts confirm it. Every claim links to its source. Nothing here is financial, medical or career advice.</span></div>
       <p class="conn-banner" id="conn-state" hidden></p>`;
+    wireNav(el);
+  }
+  function wireNav(root) {
+    const groups = [...root.querySelectorAll(".nav-group")];
+    const closeAll = except => groups.forEach(g => { if (g !== except) { g.classList.remove("open"); g.querySelector(".nav-group-btn").setAttribute("aria-expanded", "false"); } });
+    groups.forEach(g => { const b = g.querySelector(".nav-group-btn");
+      b.addEventListener("click", e => { e.stopPropagation(); const o = !g.classList.contains("open"); closeAll(g); g.classList.toggle("open", o); b.setAttribute("aria-expanded", o); }); });
+    document.addEventListener("click", e => { if (!e.target.closest(".nav-group")) closeAll(); });
+    document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
+    const t = root.querySelector(".nav-toggle"), box = root.querySelector(".nav-groups");
+    t.addEventListener("click", () => { const o = !box.classList.contains("open"); box.classList.toggle("open", o); t.setAttribute("aria-expanded", o); });
   }
 
   let sb = null;
@@ -444,129 +529,15 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
 
 </script>
 <script>
-const { esc, fmtDate, fmtDateTime, bullets, todayISO, TIER_LABEL, cite } = PT;
-const VERDICTS = {
-  confirmed: { label: "Confirmed breakthrough", color: "var(--v-confirmed)", desc: "Strong evidence, and a game-changer for its field." },
-  solid:     { label: "Solid progress",         color: "var(--v-solid)",     desc: "Strong evidence, but a smaller step forward." },
-  bigif:     { label: "Big if true",            color: "var(--v-bigif)",     desc: "Could be huge, but nobody has confirmed it yet." },
-  early:     { label: "Early signal",           color: "var(--v-early)",     desc: "Not confirmed and smaller. Worth keeping an eye on." },
-};
-const MAG_LABEL = { 1: "Small step", 2: "Big step", 3: "Game-changer" };
-const verdictOf = r => { const solid = r.reality_tier <= 2, big = r.magnitude >= 3; return solid ? (big ? "confirmed" : "solid") : (big ? "bigif" : "early"); };
-let DATA = [], SIGNALS = [], SYN = null;
-const state = { search: "", verdict: "all", field: "all", tier: "all", lab: "all", sortBy: "added_desc" };
-
-function renderSignals() {
-  const card = document.getElementById("signals-card"); if (!SIGNALS.length) { card.hidden = true; return; } card.hidden = false;
-  const page = { acceleration: "curve.html", risk: "risk.html", bubble: "bubble.html", upside: "upside.html" };
-  document.getElementById("signals-list").innerHTML = SIGNALS.map(s => `
-    <div class="signal-row"><a class="track-pill track-${esc(s.track)}" href="${page[s.track]}" style="text-decoration:none">${s.track === "upside" ? "going right" : s.track === "risk" ? "risk" : esc(s.track)}</a>
-      <div><p class="signal-title"><a href="${page[s.track]}#signal-${s.id}">${esc(s.title)}</a></p>
-        <p class="signal-sum">${esc(s.summary)}${cite(s.reference_key)}</p>
-        <div class="signal-meta"><span>${esc(s.source_site)} · ${fmtDate(s.source_publish_date)}</span>${s.severity ? `<span class="sev" title="Severity ${s.severity}/5">${"●".repeat(s.severity)}${"○".repeat(5 - s.severity)}</span>` : ""}<span>${PT.dirInfo(s.track, s.direction)[0]}</span><span>Tier ${s.reality_tier} · ${TIER_LABEL[s.reality_tier]}</span></div>
-      </div></div>`).join("");
-}
-function renderSynthesis() {
-  const card = document.getElementById("analysis-card"); if (!SYN) { card.hidden = true; return; }
-  const a = SYN.analysis; card.hidden = false;
-  document.getElementById("analysis-title").textContent = `The last six weeks in brief (as of ${fmtDateTime(SYN.inserted_at)})`;
-  document.getElementById("analysis-meta").textContent = a.period_label || "";
-  document.getElementById("analysis-summary").innerHTML = (a.executive_summary || []).map(it => `${esc(it.text)}${cite(it.source_refs)}`).join(" ");
-  const li = items => (items || []).map(it => `<li>${it.label ? `<span class="item-label">${esc(it.label)}:</span>` : ""}${esc(it.text)}${cite(it.source_refs)}</li>`).join("");
-  document.getElementById("analysis-findings").innerHTML = li(a.key_findings);
-  document.getElementById("analysis-hype").innerHTML = li(a.hype_watch);
-}
-function renderLegend() {
-  document.getElementById("legend").innerHTML = Object.entries(VERDICTS).map(([k, v]) =>
-    `<div class="legend-cell" style="border-left-color:${v.color}"><strong>${v.label} <span style="color:var(--muted);font-weight:500">(${DATA.filter(r => verdictOf(r) === k).length})</span></strong>${v.desc}</div>`).join("");
-}
-function renderVerdictToggle() {
-  const el = document.getElementById("verdict-toggle");
-  const items = [["all", "All", DATA.length, null]].concat(Object.entries(VERDICTS).map(([k, v]) => [k, v.label, DATA.filter(r => verdictOf(r) === k).length, v.color]));
-  el.innerHTML = items.map(([k, l, c, col]) => `<button type="button" class="cat-btn ${k === state.verdict ? "is-active" : ""}" data-v="${k}" aria-pressed="${k === state.verdict}">${col ? `<span class="dot" style="background:${col}"></span>` : ""}${l} <span style="color:var(--muted)">${c}</span></button>`).join("");
-  el.querySelectorAll(".cat-btn").forEach(b => b.addEventListener("click", () => { state.verdict = b.dataset.v; el.querySelectorAll(".cat-btn").forEach(x => { x.classList.toggle("is-active", x === b); x.setAttribute("aria-pressed", x === b); }); applyFilters(); }));
-}
-function fillSelect(id, label, values, key, fmt) { document.getElementById(id).innerHTML = `<option value="all">${label}</option>` + values.map(v => `<option value="${esc(v)}"${String(v) === String(state[key]) ? " selected" : ""}>${esc(fmt ? fmt(v) : v)}</option>`).join(""); }
-function renderSelects() {
-  fillSelect("field-select", "All fields", [...new Set(DATA.map(r => r.field))].sort(), "field");
-  fillSelect("tier-select", "All reality tiers", [1, 2, 3, 4, 5], "tier", t => `Tier ${t}: ${TIER_LABEL[t]}`);
-  fillSelect("lab-select", "All labs & orgs", [...new Set(DATA.map(r => r.lab_or_org).filter(Boolean))].sort(), "lab");
-}
-function sorted() {
-  const by = { added_desc: (x, y) => (y.date_found || "").localeCompare(x.date_found || "") || (y.source_publish_date || "").localeCompare(x.source_publish_date || ""),
-    pub_desc: (x, y) => (y.source_publish_date || "").localeCompare(x.source_publish_date || ""),
-    signal: (x, y) => (y.relevance_score || 0) - (x.relevance_score || 0),
-    reality: (x, y) => x.reality_tier - y.reality_tier || y.magnitude - x.magnitude,
-    magnitude: (x, y) => y.magnitude - x.magnitude || x.reality_tier - y.reality_tier };
-  return [...DATA].sort(by[state.sortBy]);
-}
-function renderLedger() {
-  PT.resetCites(); renderSignals(); renderSynthesis();
-  const open = new Set([...document.querySelectorAll(".entry.is-open")].map(e => e.dataset.id)); const today = todayISO();
-  document.getElementById("ledger").innerHTML = sorted().map(r => { const v = verdictOf(r), V = VERDICTS[v];
-    return `<article class="entry${open.has(String(r.id)) ? " is-open" : ""}" id="discovery-${r.id}" data-id="${r.id}" data-verdict="${v}" data-field="${esc(r.field)}" data-tier="${r.reality_tier}" data-lab="${esc(r.lab_or_org || "")}" data-search="${esc([r.title, r.summary, r.lab_or_org, r.ai_system, r.field, (r.topic_tags || []).join(" ")].join(" ").toLowerCase())}" style="border-left-color:${V.color}">
-      <button class="entry-head" type="button" aria-expanded="${open.has(String(r.id))}">
-        <div class="score-badge" title="Signal ${r.relevance_score}/10">${r.relevance_score ?? "–"}<span>SIG</span></div>
-        <div class="entry-main"><p class="entry-title">${esc(r.title)}</p><div class="badges">
-          ${r.date_found === today ? `<span class="badge new-badge">New</span>` : ""}
-          <span class="badge verdict" style="background:${V.color}">${V.label}</span>
-          ${r.landmark ? `<span class="badge landmark">★ Landmark</span>` : ""}
-          <span class="badge field">${esc(r.field)}</span>
-          <span class="badge"><span class="dot" style="background:var(--tier-${r.reality_tier})"></span>Tier ${r.reality_tier} · ${TIER_LABEL[r.reality_tier]}</span>
-          <span class="badge">${MAG_LABEL[r.magnitude]}</span>
-          ${r.lab_or_org ? `<span class="badge">${esc(r.lab_or_org)}</span>` : ""}
-          ${r.longevity_article_id ? `<span class="badge landmark">Also on Longevity News</span>` : ""}
-          <span class="badge mono">Published ${fmtDate(r.source_publish_date)}</span>
-        </div></div>
-        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
-      </button>
-      <div class="entry-body"><div class="entry-body-inner"><div class="entry-body-content">
-        ${r.score_rationale ? `<p class="rationale"><strong>Why this grade:</strong> ${esc(r.score_rationale)}</p>` : ""}
-        <p class="entry-summary">${esc(r.summary)}${cite(r.reference_key)}</p>
-        ${r.analogy ? `<p class="callout analogy"><strong>Think of it this way:</strong> ${esc(r.analogy)}</p>` : ""}
-        <ul class="entry-bullets">${bullets(r.bullet_points).map(b => `<li>${esc(b)}</li>`).join("")}</ul>
-        ${r.why_it_matters ? `<p class="callout"><strong>Why it matters:</strong> ${esc(r.why_it_matters)}</p>` : ""}
-        ${r.hype_check ? `<p class="callout hype"><strong>Reality check:</strong> ${esc(r.hype_check)}</p>` : ""}
-        <p class="entry-meta">${r.ai_system ? `<strong>AI system:</strong> ${esc(r.ai_system)} · ` : ""}<strong>Source:</strong> ${esc(r.source_site)} · <strong>Added</strong> ${fmtDate(r.date_found)}</p>
-        <a class="entry-link" href="${esc(r.link)}" target="_blank" rel="noopener">Read source ↗</a>
-        ${r.longevity_article_id ? `<a class="longevity-link" href="${PT.LONGEVITY_URL}index.html#article-${r.longevity_article_id}" target="_blank" rel="noopener">What it means for longevity: see the Longevity News entry ↗</a>` : ""}
-      </div></div></div></article>`; }).join("");
-  PT.wireEntries(); PT.renderSources();
-}
-function applyFilters() {
-  let n = 0;
-  document.querySelectorAll("#ledger .entry").forEach(e => {
-    const m = (state.verdict === "all" || e.dataset.verdict === state.verdict) && (state.field === "all" || e.dataset.field === state.field)
-      && (state.tier === "all" || e.dataset.tier === String(state.tier)) && (state.lab === "all" || e.dataset.lab === state.lab)
-      && (!state.search || e.dataset.search.includes(state.search));
-    e.hidden = !m; if (m) n++; });
-  document.getElementById("result-line").innerHTML = `Showing <strong>${n}</strong> of ${DATA.length} discoveries`;
-  document.getElementById("empty-state").hidden = n !== 0;
-}
-function renderAll() { renderLegend(); renderVerdictToggle(); renderSelects(); renderLedger(); applyFilters(); }
-function wire() {
-  const on = (id, ev, fn) => document.getElementById(id).addEventListener(ev, fn);
-  on("field-select", "change", e => { state.field = e.target.value; applyFilters(); });
-  on("tier-select", "change", e => { state.tier = e.target.value; applyFilters(); });
-  on("lab-select", "change", e => { state.lab = e.target.value; applyFilters(); });
-  on("search-input", "input", e => { state.search = e.target.value.trim().toLowerCase(); applyFilters(); });
-  on("sort-select", "change", e => { state.sortBy = e.target.value; renderLedger(); applyFilters(); });
-  on("reset-btn", "click", () => { Object.assign(state, { search: "", verdict: "all", field: "all", tier: "all", lab: "all", sortBy: "added_desc" }); document.getElementById("search-input").value = ""; document.getElementById("sort-select").value = "added_desc"; renderAll(); });
-}
-async function load(sb) {
-  const [d, s, y] = await Promise.all([
-    sb.from("phase_discoveries").select("*").order("date_found", { ascending: false }),
-    sb.from("phase_signals").select("*").order("source_publish_date", { ascending: false }).limit(4),
-    sb.from("phase_synthesis").select("analysis, inserted_at").order("inserted_at", { ascending: false }).limit(1) ]);
-  if (d.error) throw d.error;
-  DATA = (d.data || []).map(r => ({ ...r, reality_tier: +r.reality_tier, magnitude: +r.magnitude }));
-  SIGNALS = s.data || []; SYN = y.data && y.data[0] ? y.data[0] : null;
-  renderAll();
-  await PT.lastUpdate(DATA.map(r => r.inserted_at).concat(SIGNALS.map(x => x.inserted_at)));
-}
-PT.boot({ page: "index.html", title: "Discovery Feed", tagline: "Real things AI has helped discover, in math, medicine, biology, history, physics and more, each graded on how solid the evidence is." }, async sb => {
-  wire(); await load(sb); PT.jumpToHash("discovery-");
-  setInterval(() => load(sb).catch(() => {}), 60000);
+PT.boot({ page: "index.html", sources: false }, async sb => {
+  const count = async t => { const { count: c } = await sb.from(t).select("id", { count: "exact", head: true }); return c ?? "—"; };
+  const [t, d, r, lm] = await Promise.all([count("phase_timeline"), count("phase_discoveries"), count("phase_references"),
+    sb.from("phase_timeline").select("id,event_date,title,blurb,category").eq("landmark", true).order("event_date", { ascending: false }).limit(5)]);
+  const tile = (k, v, dd, href) => `<a class="stat" href="${href}" style="text-decoration:none;color:inherit"><p class="k">${k}</p><p class="v">${v}</p><p class="d">${dd}</p></a>`;
+  document.getElementById("counts").innerHTML = tile("Events on the timeline", t, "January 2023 to today", "storyline.html") + tile("Discoveries graded", d, "From \"confirmed\" to \"big if true\"", "discoveries.html") + tile("Sources checked", r, "Every claim links to one", "overview.html");
+  const rows = (lm.data || []);
+  document.getElementById("landmarks").innerHTML = rows.length ? rows.map(x => `<div class="lm"><div class="d">${PT.fmtDate(x.event_date)}</div><div><a href="storyline.html#tl-${x.id}">${PT.esc(x.title)}</a>${x.blurb ? `<p>${PT.esc(x.blurb)}</p>` : ""}</div></div>`).join("") : `<p class="note">No landmarks yet.</p>`;
+  await PT.lastUpdate();
 });
 </script>
 </body>
