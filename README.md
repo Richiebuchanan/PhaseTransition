@@ -14,13 +14,14 @@ AI-driven discovery, acceleration, risk and the AI bubble, graded on evidence. A
 | `index.html` | Discovery Feed |
 | `baseline.html` | State of the Frontier (versioned summary) |
 | `curve.html` | The Curve (forecast tracker, METR time horizons, acceleration signals) |
-| `risk.html` | Risk Watch |
+| `upside.html` | What Could Go Right |
+| `risk.html` | What Could Go Wrong |
 | `bubble.html` | Bubble Watch |
 | `voices.html` | Voices |
 | `media.html` | Podcasts & Video |
 | `overview.html` | About |
 | `admin.html` | Password-gated intake (same password as the sister sites) |
-| (none) | Each page is self-contained (styles and scripts inlined), like the sister sites |
+| `src/` (not uploaded) | Editable source; `build.py` inlines the shared CSS/JS into each page |
 | `daily-task-prompt.md` | Prompt for the daily scheduled task |
 
 ## Backend
