@@ -53,8 +53,18 @@ Podcasts and videos are leads, not evidence. Write `summary`, `analogy`, `bullet
 ## 6. Voices → `phase_voices`
 Fill `role`, `camp`, `tagline`, `plain_take` (two plain sentences on who they are and what they think), `current_stance`, `key_claims`, `track_record`, `conflicts` (always), `links`, and `field_refs` (JSON mapping each field to an array of reference keys). Re-check an existing profile when its person makes news. Update `last_updated`.
 
+## 6b. Companies → `phase_companies`
+One row per company (`name` unique): `kind`, `founded`, `hq`, `leaders[]` (use the exact `phase_voices` name when that person has a profile, so the page can link them), `plain_take`, `what_they_make`, `key_moments`, `money`, `stake` (always fill it; it includes Anthropic), `field_refs`, `sort_order`, `last_updated`. Update a profile when the company makes news: a leadership change, a funding round, a major model, a merger, an IPO step.
+
+## 6c. The Record → `phase_timeline`
+The Record is a month-by-month history since Jan 1, 2023. Every run, add any event from the last 3 days that a reader looking back in five years would want to know about. Categories: `models` (major releases), `discovery`, `upside` (things going right in daily life), `risk` (warning signs, incidents, lawsuits), `money` (big deals, valuations, spending), `policy` (laws, government actions, international agreements), `people` (leadership changes, labor, society).
+- Fields: `event_date`, `date_precision` (`day` or `month`), `category`, `title`, `blurb` (required: one plain sentence, under ~18 words, saying what happened; it is what the Timeline page shows), `summary`, `analogy` (required), `why_it_matters`, `hype_check` (when the claim is the company's own or contested), `reality_tier` (whether *the event/claim* is confirmed), `magnitude`, `landmark` (sparingly: a turning point), `companies[]` and `people[]` (exact names as in `phase_companies` / `phase_voices`), `reference_keys[]`, `link`.
+- One entry per event. Do not duplicate something already filed under a different title; search first.
+- When a discovery or signal is also historically important, file it in its own table **and** add a short Record entry.
+- **Gap audit (first run of each month):** count entries per month × category for the previous month and compare against one outside year-in-review timeline. File anything important that is missing and note the gap fill in the run log. Back-filling of past years (2024, 2025, 2026 so far) happens in separate deep-dive sessions, not in the daily run.
+
 ## 7. Citations (trust but verify)
-Every factual sentence needs a reference. Add a row to `phase_references` (`key` slug like `source-yyyy-topic`, `citation`, `url`, `year`, `kind`, `verified`). Set `verified = true` only after you have fetched the URL and confirmed it supports the claim. Prefer primary sources (papers, filings, official disclosures) over coverage. Re-try unverified references each run.
+Every factual sentence needs a reference. Add a row to `phase_references` (`key` slug like `source-yyyy-topic`, `citation`, `url`, `year`, `kind`, `verified`). Set `verified = true` only after you have fetched the URL and confirmed it supports the claim. Prefer primary sources (papers, filings, official disclosures) over coverage. Re-try unverified references each run: fetch up to 15 rows with `verified = false` (oldest first), confirm the URL loads and supports the citation, then set `verified = true`, or fix the URL (search for the correct page) and record the change in the run log. Many 2023 references in The Record were filed from knowledge and start as unverified.
 
 ## 8. Synthesis (Mondays only) → `phase_synthesis`
 Insert a new row: `{period_label, executive_summary:[{text,source_refs}], key_findings:[{label,text,source_refs}], hype_watch:[{label,text,source_refs}]}` covering the last 6 weeks of discoveries. `source_refs` items look like `{"type":"reference","key":"..."}`.

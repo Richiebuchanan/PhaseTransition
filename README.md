@@ -17,7 +17,9 @@ AI-driven discovery, acceleration, risk and the AI bubble, graded on evidence. A
 | `upside.html` | What Could Go Right |
 | `risk.html` | What Could Go Wrong |
 | `bubble.html` | Bubble Watch |
-| `voices.html` | Voices |
+| `storyline.html` | Timeline (interactive: every story in one sentence, dot overview by category, zoom by year) |
+| `timeline.html` | The Record (month-by-month since Jan 2023, with coverage grid) |
+| `voices.html` | Voices & Players (people tab + companies tab) |
 | `media.html` | Podcasts & Video |
 | `overview.html` | About |
 | `admin.html` | Password-gated intake (same password as the sister sites) |

@@ -191,8 +191,9 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
     <p>In late 2026, the claims about AI got very big, very fast. Experts moved their predictions for "smarter-than-human" AI to as early as 2027. Company leaders talked about a turning point in science. Viral videos promised "godlike" machines and the end of aging. Meanwhile, money poured into AI so fast that many investors worry about a crash, and AI systems started causing real problems.</p>
     <p>Phase Transition tries to stay calm and clear-headed about all of it. A "phase transition" is when something changes state all at once, like water freezing into ice. Some people think AI is about to do that to the world. This site tracks the evidence for and against, in five parts:</p>
     <ul>
+      <li><strong>The record:</strong> what has happened since January 2023, month by month, with a check for gaps. (<a href="storyline.html">Timeline</a> for the one-line version, <a href="timeline.html">The Record</a> for the full detail)</li>
       <li><strong>Discoveries:</strong> what is AI actually finding, and how sure are we? (<a href="index.html">Discovery Feed</a>)</li>
-      <li><strong>Speed:</strong> is AI helping build better AI, and when do experts think it will match humans? (<a href="curve.html">The Curve</a>, <a href="voices.html">Voices</a>)</li>
+      <li><strong>Speed:</strong> is AI helping build better AI, and when do experts think it will match humans? (<a href="curve.html">The Curve</a>, <a href="voices.html">Voices &amp; Players</a>)</li>
       <li><strong>The upside:</strong> what good is AI doing, and what's only promised? (<a href="upside.html">What Could Go Right</a>)</li>
       <li><strong>The risks:</strong> how close are we to the bad outcomes people fear? (<a href="risk.html">What Could Go Wrong</a>)</li>
       <li><strong>The money:</strong> is the spending a bubble that could crash? (<a href="bubble.html">Bubble Watch</a>)</li>
@@ -213,7 +214,7 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
       <li><strong>Show your work.</strong> The little numbers next to claims link to the original source, so you can check it yourself.</li>
       <li><strong>Good news and bad news.</strong> The upside and the risks get equal space, and each page logs evidence in both directions.</li>
       <li><strong>Reality checks.</strong> When a headline, a company or a video oversells something, we say so plainly.</li>
-      <li><strong>Everyone has a stake.</strong> People building AI, safety experts and skeptics all have reasons to spin. The Voices page lists them.</li>
+      <li><strong>Everyone has a stake.</strong> People building AI, safety experts and skeptics all have reasons to spin. The Voices &amp; Players page lists them, for people and companies alike.</li>
       <li><strong>Predictions are guesses.</strong> We track them to show who changed their mind, not to tell you what will happen.</li>
       <li><strong>Plain English.</strong> If a word needs explaining, it has a dotted underline. Hover over it or tap it.</li>
     </ul>
@@ -240,12 +241,14 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
 
   const PAGES = [
     ["baseline.html", "State of the Frontier"],
+    ["storyline.html", "Timeline"],
+    ["timeline.html", "The Record"],
     ["index.html", "Discovery Feed"],
     ["curve.html", "The Curve"],
     ["upside.html", "What Could Go Right"],
     ["risk.html", "What Could Go Wrong"],
     ["bubble.html", "Bubble Watch"],
-    ["voices.html", "Voices"],
+    ["voices.html", "Voices & Players"],
     ["media.html", "Podcasts & Video"],
   ];
 
@@ -449,9 +452,9 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
 <script>
 PT.boot({ page: "overview.html", title: "About Phase Transition", tagline: "What this site tracks, how we tell real news from hype, and what we can't do.", sources: false }, async sb => {
   const count = async (t, f) => { let q = sb.from(t).select("id", { count: "exact", head: true }); if (f) q = q.eq(f[0], f[1]); const { count: c } = await q; return c ?? "—"; };
-  const [d, u, r, b, a, v, s] = await Promise.all([count("phase_discoveries"), count("phase_signals", ["track", "upside"]), count("phase_signals", ["track", "risk"]), count("phase_signals", ["track", "bubble"]), count("phase_signals", ["track", "acceleration"]), count("phase_voices"), count("phase_references")]);
+  const [t, co, d, u, r, b, a, v, s] = await Promise.all([count("phase_timeline"), count("phase_companies"), count("phase_discoveries"), count("phase_signals", ["track", "upside"]), count("phase_signals", ["track", "risk"]), count("phase_signals", ["track", "bubble"]), count("phase_signals", ["track", "acceleration"]), count("phase_voices"), count("phase_references")]);
   const tile = (k, v, href) => `<a class="stat" href="${href}" style="text-decoration:none;color:inherit"><p class="k">${k}</p><p class="v">${v}</p></a>`;
-  document.getElementById("counts").innerHTML = tile("Discoveries graded", d, "index.html") + tile("Speed-up news", a, "curve.html") + tile("Going right", u, "upside.html") + tile("Going wrong", r, "risk.html") + tile("Bubble news", b, "bubble.html") + tile("Voices profiled", v, "voices.html") + tile("Sources cited", s, "baseline.html");
+  document.getElementById("counts").innerHTML = tile("Events in The Record", t, "timeline.html") + tile("Discoveries graded", d, "index.html") + tile("Speed-up news", a, "curve.html") + tile("Going right", u, "upside.html") + tile("Going wrong", r, "risk.html") + tile("Bubble news", b, "bubble.html") + tile("People profiled", v, "voices.html") + tile("Companies profiled", co, "voices.html#companies") + tile("Sources cited", s, "baseline.html");
   await PT.lastUpdate();
 });
 </script>

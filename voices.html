@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Voices — Phase Transition</title>
+<title>Voices &amp; Players — Phase Transition</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -186,7 +186,10 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
   .voice dt.conflict { color:var(--warn); }
   .voice .links { margin-top:10px; display:flex; flex-wrap:wrap; gap:10px; font-size:12.5px; } .voice .links a { font-weight:600; text-decoration:none; }
   .fc { font-family:"IBM Plex Mono",monospace; font-size:12px; }
-  .camp-builder { color:var(--accel); } .camp-skeptic { color:var(--down); } .camp-academic { color:var(--v-solid); } .camp-forecaster { color:var(--warn); }
+  .camp-builder { color:var(--accel); } .camp-skeptic { color:var(--down); } .camp-academic { color:var(--v-solid); } .camp-forecaster { color:var(--warn); } .camp-watchdog { color:var(--risk); }
+  .tabs { display:flex; gap:6px; margin:0 0 12px; } .tabs .cat-btn { font-size:13px; font-weight:600; padding:7px 12px; }
+  .co .kind { font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); font-weight:600; }
+  .co .meta { font-size:12px; color:var(--muted); margin:2px 0 8px; font-family:"IBM Plex Mono",monospace; }
   @media (max-width:820px) { .voice-grid { grid-template-columns:1fr; } }
 </style>
 </head>
@@ -194,10 +197,20 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
 <div class="app">
   <header class="masthead" id="masthead"></header>
   <p class="note" style="margin:0 2px 12px">Everyone here has something riding on what they say, and we list it. People building AI benefit from excitement; safety experts gain influence when people are worried; skeptics build audiences on doubt. It's like listening to a team's coach, a rival coach and a sports reporter: each knows a lot, and each has a reason to spin. Judge the evidence they show, not how famous they are.</p>
+  <div class="tabs" role="tablist" aria-label="People or companies">
+    <button type="button" class="cat-btn is-active" role="tab" id="tab-people" aria-selected="true">People</button>
+    <button type="button" class="cat-btn" role="tab" id="tab-companies" aria-selected="false">Companies</button>
+  </div>
+  <section id="people-panel">
   <div class="filter-bar" role="search">
     <div class="cat-toggle" id="camp-toggle" role="group" aria-label="Camp"></div>
   </div>
   <div class="voice-grid" id="grid"></div>
+  </section>
+  <section id="companies-panel" hidden>
+    <p class="note" style="margin:0 2px 12px">The companies building frontier AI, and the ones selling them the chips and computers. Like the teams in a league: who they are, who runs them, what they've done since 2023, and where the money comes from. Every one of them benefits when people believe AI is about to get much more powerful, including Anthropic, whose model, Claude, writes this site.</p>
+    <div class="voice-grid" id="co-grid"></div>
+  </section>
 </div>
 <script>
 /* Phase Transition — shared client: Supabase, masthead/nav, footnotes, formatting, tooltip. */
@@ -208,12 +221,14 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
 
   const PAGES = [
     ["baseline.html", "State of the Frontier"],
+    ["storyline.html", "Timeline"],
+    ["timeline.html", "The Record"],
     ["index.html", "Discovery Feed"],
     ["curve.html", "The Curve"],
     ["upside.html", "What Could Go Right"],
     ["risk.html", "What Could Go Wrong"],
     ["bubble.html", "Bubble Watch"],
-    ["voices.html", "Voices"],
+    ["voices.html", "Voices & Players"],
     ["media.html", "Podcasts & Video"],
   ];
 
@@ -416,10 +431,36 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
 </script>
 <script>
 const { esc, cite, fmtDate } = PT;
-let VOICES = [], FC = []; let camp = "all";
+let VOICES = [], FC = [], COS = []; let camp = "all", tab = "people";
+const slugV = n => "voice-" + n.toLowerCase().replace(/[^a-z]+/g, "-");
+function renderCompanies() {
+  const names = new Set(VOICES.map(v => v.name));
+  document.getElementById("co-grid").innerHTML = COS.map(c => { const fr = c.field_refs || {};
+    const row = (label, key) => c[key] ? `<dt>${label}</dt><dd>${esc(c[key])}${cite(fr[key])}</dd>` : "";
+    const leaders = (c.leaders || []).map(l => { const base = l.replace(/\s*\(.*\)$/, ""); return names.has(base) ? `<a href="#${slugV(base)}" data-person="${esc(base)}">${esc(l)}</a>` : esc(l); }).join(", ");
+    return `<article class="voice co" id="company-${esc(c.name.toLowerCase().replace(/[^a-z]+/g, "-"))}">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3>${esc(c.name)}</h3><span class="kind">${esc(c.kind || "")}</span></div>
+      <p class="meta">${[c.founded && "Founded " + c.founded, c.hq].filter(Boolean).map(esc).join(" · ")}</p>
+      ${leaders ? `<p class="role">Led by ${leaders}</p>` : ""}
+      ${c.plain_take ? `<p class="plain" style="font-size:13px">${esc(c.plain_take)}</p>` : ""}
+      <dl>${row("What they make", "what_they_make")}${row("Key moments since 2023", "key_moments")}${row("The money", "money")}</dl>
+      ${c.stake ? `<dl><dt class="conflict">What they have riding on it</dt><dd>${esc(c.stake)}${cite(fr.stake)}</dd></dl>` : ""}
+      <div class="links"><a href="timeline.html?q=${encodeURIComponent(c.name.replace(/\s*\(.*\)$/, ""))}">See them in The Record →</a></div>
+      ${c.last_updated ? `<p class="note" style="margin:10px 0 0">Profile checked ${fmtDate(c.last_updated)}</p>` : ""}
+    </article>`; }).join("");
+  document.querySelectorAll("#co-grid a[data-person]").forEach(a => a.addEventListener("click", e => { e.preventDefault(); setTab("people", "#" + slugV(a.dataset.person)); }));
+}
+function setTab(t, hash) {
+  tab = t; const p = t === "people";
+  document.getElementById("people-panel").hidden = !p; document.getElementById("companies-panel").hidden = p;
+  [["tab-people", p], ["tab-companies", !p]].forEach(([id, on]) => { const b = document.getElementById(id); b.classList.toggle("is-active", on); b.setAttribute("aria-selected", on); });
+  render();
+  if (hash) { history.replaceState(null, "", hash); const el = document.getElementById(hash.slice(1)); if (el) el.scrollIntoView({ behavior: "smooth" }); }
+}
 const CAMP_LABEL = { builder: "Builders", academic: "Academics", forecaster: "Forecasters", skeptic: "Skeptics", watchdog: "Watchdogs", investor: "Investors", policy: "Policy" };
 function render() {
   PT.resetCites();
+  if (tab === "companies") { renderCompanies(); PT.renderSources(); return; }
   const t = document.getElementById("camp-toggle"); const camps = [...new Set(VOICES.map(v => v.camp))];
   t.innerHTML = [["all", "Everyone"]].concat(camps.map(c => [c, CAMP_LABEL[c] || c])).map(([k, l]) => `<button type="button" class="cat-btn ${k === camp ? "is-active" : ""}" data-k="${k}" aria-pressed="${k === camp}">${esc(l)} <span style="color:var(--muted)">${k === "all" ? VOICES.length : VOICES.filter(v => v.camp === k).length}</span></button>`).join("");
   t.querySelectorAll(".cat-btn").forEach(b => b.addEventListener("click", () => { camp = b.dataset.k; render(); }));
@@ -438,13 +479,18 @@ function render() {
     </article>`; }).join("");
   PT.renderSources();
 }
-PT.boot({ page: "voices.html", title: "Voices", tagline: "The people whose opinions shape the AI debate: builders, scientists, forecasters and skeptics. What they say now, how their predictions have changed, how often they've been right, and what they have riding on it." }, async sb => {
-  const [v, f] = await Promise.all([sb.from("phase_voices").select("*").eq("active", true).order("name"), sb.from("phase_forecasts").select("*")]);
+PT.boot({ page: "voices.html", title: "Voices & Players", tagline: "The people and companies shaping AI: builders, scientists, forecasters, watchdogs and skeptics. What they say now, how their predictions have changed, how often they've been right, and what they have riding on it." }, async sb => {
+  document.getElementById("tab-people").addEventListener("click", () => setTab("people", "#people"));
+  document.getElementById("tab-companies").addEventListener("click", () => setTab("companies", "#companies"));
+  const [v, f, c] = await Promise.all([sb.from("phase_voices").select("*").eq("active", true).order("name"), sb.from("phase_forecasts").select("*"), sb.from("phase_companies").select("*").order("sort_order")]);
+  COS = c.data || [];
   if (v.error) throw v.error;
-  const order = { forecaster: 0, builder: 1, academic: 2, skeptic: 3 };
+  const order = { builder: 0, forecaster: 1, academic: 2, watchdog: 3, skeptic: 4 };
   VOICES = (v.data || []).sort((a, b) => (order[a.camp] ?? 9) - (order[b.camp] ?? 9) || a.name.localeCompare(b.name)); FC = f.data || [];
-  render();
+  if (location.hash === "#companies" || location.hash.startsWith("#company-")) setTab("companies", location.hash);
+  else { render();
   if (location.hash) { const el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView({ behavior: "smooth" }); }
+  }
   await PT.lastUpdate(VOICES.map(x => x.added_at));
 });
 </script>

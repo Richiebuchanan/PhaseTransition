@@ -200,7 +200,7 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
   <div class="forms" id="forms" hidden>
     <form class="card" data-action="add_link"><h2>Submit a link</h2><p class="sub">The next run verifies it against a primary source, grades it and files it, or explains why it was rejected.</p>
       <label>URL<input type="url" name="link" required></label>
-      <label>Section<select name="track"><option value="discovery">Discovery</option><option value="acceleration">Acceleration</option><option value="risk">Risk</option><option value="bubble">Bubble</option><option value="media">Podcast / video</option></select></label>
+      <label>Section<select name="track"><option value="discovery">Discovery</option><option value="acceleration">Acceleration</option><option value="upside">What could go right</option><option value="risk">Risk</option><option value="bubble">Bubble</option><option value="record">The Record (history)</option><option value="media">Podcast / video</option></select></label>
       <label>Notes (optional)<textarea name="notes" placeholder="Why it matters, what to check…"></textarea></label>
       <button class="btn" type="submit">Queue link</button><p class="msg" role="status"></p></form>
     <form class="card" data-action="add_media_link"><h2>Add a podcast or video</h2><p class="sub">Summarized, with its checkable claims checked.</p>
@@ -218,7 +218,7 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
       <button class="btn" type="submit">Add</button><p class="msg" role="status"></p></form>
     <form class="card" data-action="add_search_term"><h2>Add a search term</h2>
       <label>Term<input type="text" name="term" required></label>
-      <label>Section<select name="track"><option value="discovery">Discovery</option><option value="acceleration">Acceleration</option><option value="risk">Risk</option><option value="bubble">Bubble</option></select></label>
+      <label>Section<select name="track"><option value="discovery">Discovery</option><option value="acceleration">Acceleration</option><option value="upside">What could go right</option><option value="risk">Risk</option><option value="bubble">Bubble</option></select></label>
       <button class="btn" type="submit">Add</button><p class="msg" role="status"></p></form>
   </div>
 </div>
@@ -231,12 +231,14 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
 
   const PAGES = [
     ["baseline.html", "State of the Frontier"],
+    ["storyline.html", "Timeline"],
+    ["timeline.html", "The Record"],
     ["index.html", "Discovery Feed"],
     ["curve.html", "The Curve"],
     ["upside.html", "What Could Go Right"],
     ["risk.html", "What Could Go Wrong"],
     ["bubble.html", "Bubble Watch"],
-    ["voices.html", "Voices"],
+    ["voices.html", "Voices & Players"],
     ["media.html", "Podcasts & Video"],
   ];
 
