@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* Phase Transition — shared styles (same visual system as Longevity News / Surety Market Intelligence) */
+/* Phase Transition — shared styles (same visual system as Longevity News) */
 :root {
   color-scheme: light;
   --ground:#f3f3f6; --plane:#e9e9ef; --surface:#ffffff; --surface-2:#f6f6fa;
@@ -446,7 +446,7 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
   /* boot helper */
   async function boot(opts, fn) {
     header(opts);
-    document.querySelector(".app").insertAdjacentHTML("beforeend", (opts.sources === false ? "" : SOURCES_HTML) + `<footer class="note">Reads live from Supabase. Sister sites: <a href="${LONGEVITY_URL}" target="_blank" rel="noopener">Longevity News</a> · <a href="https://richiebuchanan.github.io/SuretyMarketIntelligence/" target="_blank" rel="noopener">Surety Market Intelligence</a>.</footer>`);
+    document.querySelector(".app").insertAdjacentHTML("beforeend", (opts.sources === false ? "" : SOURCES_HTML) + `<footer class="note">Reads live from Supabase. Sister site: <a href="${LONGEVITY_URL}" target="_blank" rel="noopener">Longevity News</a>.</footer>`);
     connState("loading", "Connecting to Supabase…");
     if (!client()) return;
     await loadRefs();

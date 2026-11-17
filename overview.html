@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* Phase Transition — shared styles (same visual system as Longevity News / Surety Market Intelligence) */
+/* Phase Transition — shared styles (same visual system as Longevity News) */
 :root {
   color-scheme: light;
   --ground:#f3f3f6; --plane:#e9e9ef; --surface:#ffffff; --surface-2:#f6f6fa;
@@ -268,7 +268,7 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
     <p>Every day, an automatic check looks through science journals, research sites, company announcements, safety testers, forecasters and financial news. Each new item is checked against its original source, graded and added with citations. Anything that can't be checked is left out. The State of the Frontier page only changes when strong new evidence arrives, and old versions are kept so you can see what changed.</p>
 
     <h2>Related sites</h2>
-    <p>AI discoveries about health and aging also appear on <a href="https://richiebuchanan.github.io/LongevityNews/" target="_blank" rel="noopener">Longevity News</a>, which explains what they mean for living longer and healthier. Items on both sites link to each other. The same setup runs <a href="https://richiebuchanan.github.io/SuretyMarketIntelligence/" target="_blank" rel="noopener">Surety Market Intelligence</a>.</p>
+    <p>AI discoveries about health and aging also appear on <a href="https://richiebuchanan.github.io/LongevityNews/" target="_blank" rel="noopener">Longevity News</a>, which explains what they mean for living longer and healthier. Items on both sites link to each other.</p>
 
     <h2>Limits</h2>
     <p>This is a personal research project, not a news organization. It can be wrong, late or missing things, and AI-written summaries can contain mistakes even when they cite sources. Check the sources before relying on anything here. Nothing on this site is financial, medical, legal or career advice.</p>
@@ -490,7 +490,7 @@ abbr.gloss:focus-visible { outline:2px solid var(--accent); outline-offset:2px; 
   /* boot helper */
   async function boot(opts, fn) {
     header(opts);
-    document.querySelector(".app").insertAdjacentHTML("beforeend", (opts.sources === false ? "" : SOURCES_HTML) + `<footer class="note">Reads live from Supabase. Sister sites: <a href="${LONGEVITY_URL}" target="_blank" rel="noopener">Longevity News</a> · <a href="https://richiebuchanan.github.io/SuretyMarketIntelligence/" target="_blank" rel="noopener">Surety Market Intelligence</a>.</footer>`);
+    document.querySelector(".app").insertAdjacentHTML("beforeend", (opts.sources === false ? "" : SOURCES_HTML) + `<footer class="note">Reads live from Supabase. Sister site: <a href="${LONGEVITY_URL}" target="_blank" rel="noopener">Longevity News</a>.</footer>`);
     connState("loading", "Connecting to Supabase…");
     if (!client()) return;
     await loadRefs();

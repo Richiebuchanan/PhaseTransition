@@ -1,6 +1,6 @@
 # Phase Transition
 
-AI-driven discovery, acceleration, risk and the AI bubble, graded on evidence. A sister site to Longevity News and Surety Market Intelligence.
+AI-driven discovery, acceleration, risk and the AI bubble, graded on evidence. A sister site to Longevity News.
 
 ## Deploy (GitHub Pages)
 1. Create a repo named `PhaseTransition`.
