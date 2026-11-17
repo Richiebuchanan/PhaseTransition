@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Bubble Watch — Phase Transition</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Phase Transition — shared styles (same visual system as Longevity News / Surety Market Intelligence) */
+:root {
+  color-scheme: light;
+  --ground:#f3f3f6; --plane:#e9e9ef; --surface:#ffffff; --surface-2:#f6f6fa;
+  --ink:#1a1a1f; --ink-secondary:#4d4d57; --muted:#75757f;
+  --border:rgba(26,26,31,0.12); --border-strong:rgba(26,26,31,0.22);
+  --accent:#5a3fd0; --accent-ink:#ffffff; --accent-wash:rgba(90,63,208,0.08); --accent-wash-2:rgba(90,63,208,0.20); --link:#4a32b8;
+  --tier-1:#1f8a4c; --tier-2:#2a78d6; --tier-3:#eda100; --tier-4:#eb6834; --tier-5:#8a8a8a;
+  --v-confirmed:#1f8a4c; --v-solid:#2a78d6; --v-bigif:#c98500; --v-early:#8a8a8a;
+  --risk:#c8102e; --bubble:#b45309; --accel:#5a3fd0;
+  --up:#c8102e; --down:#1f8a4c; --flat:#75757f;
+  --warn:#b45309; --warn-wash:rgba(180,83,9,0.08); --warn-wash-2:rgba(180,83,9,0.22);
+  --ok:#1f8a4c; --ok-wash:rgba(31,138,76,0.10); --ok-wash-2:rgba(31,138,76,0.28);
+  --grid:rgba(26,26,31,0.08);
+  --shadow-1:0 1px 2px rgba(26,26,31,0.06); --shadow-2:0 8px 24px rgba(26,26,31,0.10);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  color-scheme:dark; --ground:#121216; --plane:#18181d; --surface:#1e1e24; --surface-2:#26262e;
+  --ink:#f2f2f5; --ink-secondary:#c7c7cf; --muted:#9a9aa4; --border:rgba(242,242,245,0.12); --border-strong:rgba(242,242,245,0.22);
+  --accent:#a48bff; --accent-ink:#160d3a; --accent-wash:rgba(164,139,255,0.14); --accent-wash-2:rgba(164,139,255,0.28); --link:#b9a6ff;
+  --tier-1:#33b06a; --tier-2:#3987e5; --tier-3:#c98500; --tier-4:#d95926; --tier-5:#8f8f8f;
+  --v-confirmed:#33b06a; --v-solid:#3987e5; --v-bigif:#f0b429; --v-early:#8f8f99;
+  --risk:#ff4d68; --bubble:#f0a33a; --accel:#a48bff;
+  --up:#ff6b81; --down:#33b06a; --flat:#9a9aa4;
+  --warn:#f0a33a; --warn-wash:rgba(240,163,58,0.10); --warn-wash-2:rgba(240,163,58,0.26);
+  --ok:#33b06a; --ok-wash:rgba(51,176,106,0.14); --ok-wash-2:rgba(51,176,106,0.3);
+  --grid:rgba(242,242,245,0.08);
+  --shadow-1:0 1px 2px rgba(0,0,0,0.30); --shadow-2:0 12px 32px rgba(0,0,0,0.45);
+} }
+* { box-sizing:border-box; } html { -webkit-text-size-adjust:100%; } html,body { overflow-x:hidden; width:100%; max-width:100vw; }
+body { margin:0; background:var(--ground); color:var(--ink); font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5; }
+@media (prefers-reduced-motion:no-preference) { .entry-body { transition:grid-template-rows 180ms ease; } .chevron { transition:transform 150ms ease; } }
+h1,h2,h3 { font-weight:700; text-wrap:balance; margin:0; } a { color:var(--link); }
+.mono { font-family:"IBM Plex Mono",ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+.app { max-width:1040px; margin:0 auto; padding:28px 20px 80px; width:100%; }
+
+/* masthead */
+.masthead { padding:8px 4px 0; margin-bottom:18px; }
+.masthead h1 { font-size:clamp(28px,4vw,38px); letter-spacing:-0.01em; display:flex; align-items:center; gap:10px; }
+.masthead h1 a { color:inherit; text-decoration:none; display:inline-flex; align-items:center; gap:10px; }
+.logo-mark { width:30px; height:30px; flex:none; }
+.mast-sub { margin:10px 0 0; max-width:66ch; color:var(--ink-secondary); font-size:15px; }
+.mast-meta { margin-top:14px; font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12px; color:var(--muted); }
+.masthead-divider { border-top:1px solid var(--border); margin:16px 0; }
+.site-nav { display:flex; gap:6px 14px; margin-top:12px; font-size:13px; font-weight:600; flex-wrap:wrap; }
+.site-nav a { text-decoration:none; color:var(--ink-secondary); padding:4px 0; border-bottom:2px solid transparent; }
+.site-nav a:hover { color:var(--ink); } .site-nav a.is-current { color:var(--accent); border-bottom-color:var(--accent); }
+.site-nav a.sister { color:var(--muted); font-weight:500; margin-left:auto; }
+.page-title { font-size:20px; margin:4px 0 0; }
+.page-tagline { margin:6px 0 0; font-size:13px; color:var(--muted); max-width:72ch; }
+.masthead-title-row { display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.overview-link { color:var(--link); font-weight:700; font-size:13px; text-decoration:none; white-space:nowrap; }
+.disclaimer-banner { display:flex; gap:10px; align-items:flex-start; background:var(--accent-wash); border:1px solid var(--accent-wash-2); border-radius:8px; padding:12px 14px; font-size:13px; line-height:1.5; }
+.disclaimer-banner strong { color:var(--accent); }
+.conn-banner { margin:8px 0 0; padding:10px 14px; border-radius:8px; background:var(--accent-wash); border:1px solid var(--accent-wash-2); font-size:13.5px; }
+
+/* cards & sections */
+.card { background:var(--surface); border:1px solid var(--border); border-radius:10px; box-shadow:var(--shadow-1); padding:18px 20px; margin:0 0 18px; }
+.card h2 { font-size:16px; } .card .sub { font-size:12.5px; color:var(--muted); margin:4px 0 12px; max-width:76ch; }
+.section-head { display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 10px; margin:26px 2px 10px; }
+.section-head h2 { font-size:16px; } .section-head p { font-size:12.5px; color:var(--muted); margin:0; max-width:76ch; }
+.note { font-size:12px; color:var(--muted); max-width:78ch; }
+
+/* filter bar */
+.filter-bar { display:flex; flex-wrap:wrap; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:10px 12px; margin-bottom:16px; box-shadow:var(--shadow-1); position:sticky; top:12px; z-index:5; }
+.search-wrap { position:relative; flex:1 1 200px; min-width:160px; }
+.search-wrap svg { position:absolute; left:9px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:var(--muted); pointer-events:none; }
+.search-wrap input { width:100%; font:inherit; font-size:13.5px; padding:7px 10px 7px 28px; border-radius:6px; border:1px solid var(--border-strong); background:var(--surface-2); color:var(--ink); }
+.search-wrap input:focus-visible, select:focus-visible, button:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+.cat-toggle { display:inline-flex; gap:4px; padding:3px; background:var(--surface-2); border:1px solid var(--border); border-radius:7px; flex-wrap:wrap; }
+.cat-btn { all:unset; cursor:pointer; font-size:12px; font-weight:500; padding:5px 9px; border-radius:5px; color:var(--ink-secondary); display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+.cat-btn .dot { width:7px; height:7px; border-radius:50%; flex:none; } .cat-btn:hover { background:var(--surface); }
+.cat-btn.is-active { background:var(--surface); color:var(--ink); box-shadow:0 0 0 1px var(--border-strong); }
+select { font:inherit; font-size:12.5px; color:var(--ink); background:var(--surface-2); border:1px solid var(--border-strong); border-radius:6px; padding:6px 9px; cursor:pointer; }
+.reset-btn { all:unset; cursor:pointer; font-size:12px; color:var(--muted); padding:6px 8px; border-radius:6px; } .reset-btn:hover { color:var(--ink); background:var(--surface-2); }
+.result-line { font-size:12.5px; color:var(--muted); margin:0 2px 10px; } .result-line strong { color:var(--ink); }
+
+/* ledger entries (expandable) */
+.ledger { display:flex; flex-direction:column; gap:8px; }
+.entry { background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--border-strong); border-radius:8px; box-shadow:var(--shadow-1); overflow:hidden; scroll-margin-top:96px; }
+@keyframes cite-flash { 0% { background:var(--accent-wash-2); } 100% { background:var(--surface); } } .entry.is-highlighted { animation:cite-flash 1.8s ease-out; }
+.entry-head { all:unset; box-sizing:border-box; display:grid; grid-template-columns:40px 1fr 20px; align-items:center; gap:14px; width:100%; padding:13px 14px; cursor:pointer; }
+.entry-head:hover { background:var(--surface-2); } .entry-head:focus-visible { outline:2px solid var(--accent); outline-offset:-2px; }
+.score-badge { font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:14px; width:40px; height:40px; border-radius:7px; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1; background:var(--surface-2); border:1px solid var(--border); }
+.score-badge span { font-size:8px; font-weight:500; color:var(--muted); margin-top:2px; }
+.entry-main { min-width:0; text-align:left; }
+.entry-title { font-weight:600; font-size:14.5px; margin:0 0 6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.badges { display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+.badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; padding:2px 7px; border-radius:20px; color:var(--ink-secondary); background:var(--surface-2); border:1px solid var(--border); white-space:nowrap; }
+.badge .dot { width:6px; height:6px; border-radius:50%; flex:none; } .badge.mono { font-family:"IBM Plex Mono",monospace; }
+.badge.verdict { font-weight:700; color:#fff; border:none; }
+.badge.field { background:var(--accent-wash); border-color:var(--accent-wash-2); color:var(--accent); font-weight:600; }
+.badge.new-badge { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); font-weight:700; }
+.badge.landmark { background:var(--ok-wash); border-color:var(--ok-wash-2); color:var(--ok); font-weight:600; }
+.badge.dir-escalating { color:var(--up); border-color:currentColor; font-weight:600; } .badge.dir-easing { color:var(--down); border-color:currentColor; font-weight:600; } .badge.dir-neutral { font-weight:600; }
+.chevron { justify-self:end; width:18px; height:18px; color:var(--muted); } .entry.is-open .chevron { transform:rotate(180deg); }
+.entry-body { display:grid; grid-template-rows:0fr; } .entry.is-open .entry-body { grid-template-rows:1fr; } .entry-body-inner { overflow:hidden; min-height:0; }
+.entry-body-content { padding:14px 18px 20px 68px; border-top:1px solid var(--border); }
+.entry-summary { font-size:13.5px; color:var(--ink-secondary); margin:0 0 12px; max-width:70ch; }
+.entry-bullets { margin:0 0 12px; padding-left:18px; font-size:13px; color:var(--ink-secondary); } .entry-bullets li { margin-bottom:4px; }
+.callout { font-size:13px; background:var(--surface-2); border-left:2px solid var(--accent); padding:9px 12px; border-radius:0 6px 6px 0; margin:0 0 10px; max-width:70ch; }
+.callout strong { color:var(--accent); }
+.callout.hype { background:var(--warn-wash); border-left-color:var(--warn); } .callout.hype strong { color:var(--warn); }
+.callout.counter { background:var(--ok-wash); border-left-color:var(--ok); } .callout.counter strong { color:var(--ok); }
+.entry-meta { font-size:12px; color:var(--muted); margin:0 0 12px; } .entry-meta strong { color:var(--ink-secondary); font-weight:600; }
+.entry-link { display:inline-flex; align-items:center; gap:5px; font-size:12.5px; font-weight:600; text-decoration:none; color:var(--link); margin-right:14px; } .entry-link:hover { text-decoration:underline; }
+.rationale { font-size:11.5px; color:var(--muted); margin:-4px 0 12px; font-style:italic; max-width:76ch; }
+.empty-state { text-align:center; padding:40px 20px; color:var(--muted); font-size:13.5px; background:var(--surface); border:1px dashed var(--border-strong); border-radius:8px; }
+footer.note { margin-top:26px; font-size:11.5px; color:var(--muted); text-align:center; max-width:none; }
+
+/* pills */
+.track-pill { display:inline-block; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:3px 8px; border-radius:20px; text-align:center; border:1px solid currentColor; white-space:nowrap; }
+.track-acceleration { color:var(--accel); } .track-risk { color:var(--risk); } .track-bubble { color:var(--bubble); }
+.sev { letter-spacing:1px; font-family:"IBM Plex Mono",monospace; }
+
+/* analysis lists */
+.analysis-section { margin:0 0 16px; } .analysis-section h3 { font-size:12.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--accent); margin:0 0 8px; }
+.analysis-section p { font-size:13.5px; margin:0; max-width:74ch; line-height:1.65; }
+.arrow-list { list-style:none; margin:0; padding:0; font-size:13.5px; } .arrow-list li { position:relative; padding-left:24px; margin-bottom:9px; max-width:70ch; }
+.arrow-list li::before { content:"\2192"; position:absolute; left:4px; color:var(--accent); font-weight:700; }
+.arrow-list.hype li::before { content:"\26A0"; color:var(--warn); }
+.arrow-list.contested li::before { content:"?"; color:var(--warn); font-weight:800; left:7px; }
+.arrow-list.change li::before { content:"\21C4"; color:var(--muted); }
+.item-label { font-weight:700; margin-right:4px; }
+
+/* footnotes & sources */
+sup.fn { font-size:10px; line-height:0; margin-left:2px; white-space:nowrap; } sup.fn a { color:var(--link); text-decoration:none; font-weight:700; font-family:"IBM Plex Mono",monospace; padding:0 1px; } sup.fn a:hover { text-decoration:underline; }
+.sources { margin-top:34px; } .sources h2 { font-size:15px; margin:0 0 6px; } .sources p { font-size:12px; color:var(--muted); margin:0 0 10px; max-width:72ch; }
+.sources ol { padding-left:26px; margin:0; font-size:12.5px; color:var(--ink-secondary); } .sources li { margin-bottom:6px; overflow-wrap:anywhere; scroll-margin-top:20px; } .sources li:target { background:var(--accent-wash); border-radius:4px; }
+.sources .unverified { color:var(--warn); font-style:italic; }
+
+/* charts */
+.viz { width:100%; display:block; overflow:visible; }
+.viz text { font-family:"Inter",system-ui,sans-serif; fill:var(--muted); font-size:11px; }
+.viz .lbl { fill:var(--ink-secondary); font-size:11.5px; }
+.viz .val { fill:var(--ink); font-size:11.5px; font-weight:600; font-family:"IBM Plex Mono",monospace; }
+.viz .grid { stroke:var(--grid); stroke-width:1; } .viz .axis { stroke:var(--border-strong); stroke-width:1; }
+.viz .hit { fill:transparent; cursor:default; }
+.tooltip { position:fixed; z-index:50; pointer-events:none; background:var(--surface); color:var(--ink); border:1px solid var(--border-strong); box-shadow:var(--shadow-2); border-radius:8px; padding:8px 10px; font-size:12px; max-width:280px; line-height:1.4; display:none; }
+.tooltip strong { display:block; margin-bottom:2px; } .tooltip .mono { color:var(--ink-secondary); }
+.table-toggle { all:unset; cursor:pointer; font-size:12px; font-weight:600; color:var(--link); margin-top:8px; display:inline-block; }
+.data-table { width:100%; border-collapse:collapse; font-size:12.5px; margin-top:10px; }
+.data-table th, .data-table td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--border); vertical-align:top; }
+.data-table th { font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); font-weight:600; }
+.data-table td.num { font-family:"IBM Plex Mono",monospace; text-align:right; white-space:nowrap; }
+.stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+.stat { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px 16px; box-shadow:var(--shadow-1); }
+.stat .k { font-size:12px; color:var(--muted); margin:0 0 4px; } .stat .v { font-family:"IBM Plex Mono",monospace; font-size:24px; font-weight:600; margin:0; }
+.stat .d { font-size:12px; color:var(--ink-secondary); margin:4px 0 0; }
+
+@media (max-width:768px) {
+  .app { padding:16px 12px 50px; } * { min-width:0; } .masthead h1 { font-size:26px; } .mast-sub { font-size:13px; }
+  .site-nav a.sister { margin-left:0; }
+  .filter-bar { position:static; flex-direction:column; align-items:stretch; padding:10px; gap:10px; } .filter-bar > * { width:100%; flex:1 1 100%; }
+  .cat-btn { flex:1 1 auto; justify-content:center; padding:8px 9px; } select { width:100%; padding:9px; font-size:13px; }
+  .entry-head { grid-template-columns:28px 1fr 18px; gap:10px; padding:11px 12px; } .score-badge { width:28px; height:28px; font-size:11px; } .score-badge span { font-size:6.5px; }
+  .entry-title { white-space:normal; overflow:visible; font-size:13.5px; } .badge { font-size:10px; }
+  .entry-body-content { padding:12px 12px 16px; } .card { padding:14px; }
+}
+
+</style>
+<style>
+  .multiples { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-bottom:18px; }
+  .mini { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px 16px 10px; box-shadow:var(--shadow-1); }
+  .mini h3 { font-size:13.5px; margin:0; } .mini .sub { font-size:11.5px; color:var(--muted); margin:2px 0 6px; }
+  .check { display:grid; grid-template-columns:auto 1fr; gap:10px 14px; align-items:start; font-size:13px; }
+  .check .tag { font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px; border:1px solid currentColor; white-space:nowrap; text-align:center; }
+  .tag.warn { color:var(--up); } .tag.ok { color:var(--down); } .tag.mixed { color:var(--warn); }
+  .check p { margin:0; max-width:72ch; color:var(--ink-secondary); } .check p strong { color:var(--ink); }
+  .balance { display:flex; gap:10px; flex-wrap:wrap; margin:0 0 12px; font-size:12.5px; }
+  @media (max-width:768px) { .multiples { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="masthead" id="masthead"></header>
+
+  <section class="card">
+    <h2>The bubble checklist</h2>
+    <p class="sub">The features that separated the dot-com and railroad busts from booms that held up. "Warning" means today looks like a bubble on that test; "reassuring" means it doesn't. As of November 17, 2026.</p>
+    <div class="check" id="checklist"></div>
+  </section>
+
+  <div class="section-head"><h2>The numbers</h2><p>Hover a bar or point for detail. Each chart has one measure; none share an axis.</p></div>
+  <div class="multiples" id="multiples"></div>
+
+  <div class="filter-bar" role="search">
+    <div class="search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input id="search-input" type="text" placeholder="Search bubble signals…" autocomplete="off" aria-label="Search"></div>
+    <div class="cat-toggle" id="dir-toggle" role="group" aria-label="Direction"></div>
+    <select id="cat-select" aria-label="Category"></select>
+    <button class="reset-btn" id="reset-btn" type="button">Reset</button>
+  </div>
+  <div class="balance" id="balance"></div>
+  <div class="ledger" id="ledger"></div>
+  <p class="empty-state" id="empty-state" hidden>No signals match these filters.</p>
+</div>
+<script>
+/* Phase Transition — shared client: Supabase, masthead/nav, footnotes, formatting, tooltip. */
+(function () {
+  const SUPABASE_URL = "https://acxdvzcohjayvmqdaoke.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_2n567u9zKgZ-L-M_yGRf5Q_HEV_p1-f";
+  const LONGEVITY_URL = "https://richiebuchanan.github.io/LongevityNews/";
+
+  const PAGES = [
+    ["baseline.html", "State of the Frontier"],
+    ["index.html", "Discovery Feed"],
+    ["curve.html", "The Curve"],
+    ["risk.html", "Risk Watch"],
+    ["bubble.html", "Bubble Watch"],
+    ["voices.html", "Voices"],
+    ["media.html", "Podcasts & Video"],
+  ];
+
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+  const fmtDate = iso => { if (!iso) return "—"; const d = new Date(iso + (iso.length === 10 ? "T00:00:00" : "")); return isNaN(d) ? iso : d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }); };
+  const fmtMonth = iso => { if (!iso) return "—"; const d = new Date(iso + "T00:00:00"); return isNaN(d) ? iso : d.toLocaleDateString("en-US", { month: "short", year: "numeric" }); };
+  const fmtDateTime = iso => { if (!iso) return "—"; const d = new Date(iso); return isNaN(d) ? iso : d.toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" }); };
+  const bullets = bp => typeof bp === "string" ? bp.split("\n").map(s => s.replace(/^-\s*/, "").trim()).filter(Boolean) : Array.isArray(bp) ? bp : [];
+  const todayISO = () => new Date().toISOString().slice(0, 10);
+
+  const TIER_LABEL = { 1: "Confirmed", 2: "Peer-reviewed / checked", 3: "Preprint / report", 4: "Announcement", 5: "Claim / opinion" };
+  const DIR_LABEL = { escalating: "↑ Escalating", easing: "↓ Easing", neutral: "→ Neutral" };
+
+  const LOGO = `<svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M3 27 C 14 26, 21 22, 24 4" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="4" r="2.6" fill="var(--accent)"/><path d="M3 27 H29" stroke="var(--border-strong)" stroke-width="1.5"/></svg>`;
+
+  function header({ page, title, tagline }) {
+    const el = document.getElementById("masthead"); if (!el) return;
+    const nav = PAGES.map(([href, label]) => `<a href="${href}"${href === page ? ' class="is-current" aria-current="page"' : ""}>${esc(label)}</a>`).join("");
+    el.innerHTML = `
+      <div class="masthead-title-row">
+        <h1><a href="index.html">${LOGO}Phase Transition</a></h1>
+        <a class="overview-link" href="overview.html">About this site</a>
+      </div>
+      <p class="mast-sub">Tracking the discoveries AI is making across every field, how fast the curve is bending, and what could go wrong, from the risks to a possible bubble. Every claim graded on evidence. Refreshed daily.</p>
+      <div class="mast-meta" id="mast-meta">Last Update: —</div>
+      <nav class="site-nav" aria-label="Site">${nav}<a class="sister" href="${LONGEVITY_URL}" target="_blank" rel="noopener">Longevity News ↗</a></nav>
+      ${title ? `<h2 class="page-title" style="margin-top:14px">${esc(title)}</h2>` : ""}
+      ${tagline ? `<p class="page-tagline">${tagline}</p>` : ""}
+      <div class="masthead-divider"></div>
+      <div class="disclaimer-banner" role="note"><span aria-hidden="true">⚠️</span><span><strong>Trust but verify.</strong> Compiled by Claude (an Anthropic AI model) from published sources, and it may contain errors. Lab announcements are graded as claims until outside experts confirm them. Every claim links to its source. Nothing here is investment, medical or career advice.</span></div>
+      <p class="conn-banner" id="conn-state" hidden></p>`;
+  }
+
+  let sb = null;
+  function client() {
+    if (sb) return sb;
+    if (!window.supabase || !window.supabase.createClient) { connState("error", "Couldn't load the Supabase client library. Check your connection and reload."); return null; }
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); return sb;
+  }
+  function connState(status, msg) { const el = document.getElementById("conn-state"); if (!el) return; if (status === "ok") { el.hidden = true; return; } el.hidden = false; el.textContent = msg || ""; }
+  async function lastUpdate(extra = []) {
+    let run = null;
+    try { const { data } = await sb.from("phase_pipeline_runs").select("run_completed_at").order("run_completed_at", { ascending: false }).limit(1); run = data && data[0] ? data[0].run_completed_at : null; } catch {}
+    const ts = extra.concat([run]).filter(Boolean).map(t => new Date(t).getTime()).filter(t => !isNaN(t));
+    const el = document.getElementById("mast-meta"); if (el) el.textContent = ts.length ? `Last Update: ${fmtDateTime(new Date(Math.max(...ts)).toISOString())}` : "Last Update: —";
+  }
+
+  /* footnotes: cite(keysOrRefs) -> superscripts; renderSources() writes the numbered list */
+  let REFS = {}, CITES = new Map();
+  async function loadRefs() { try { const { data } = await sb.from("phase_references").select("key, citation, url, verified"); (data || []).forEach(r => REFS[r.key] = r); } catch {} }
+  function keysOf(x) {
+    if (!x) return [];
+    if (typeof x === "string") return [x];
+    if (Array.isArray(x)) return x.flatMap(r => typeof r === "string" ? [r] : r && r.type === "reference" && r.key ? [r.key] : []);
+    return [];
+  }
+  function cite(x) {
+    const keys = [...new Set(keysOf(x))]; if (!keys.length) return "";
+    const nums = keys.map(k => { if (!CITES.has(k)) CITES.set(k, CITES.size + 1); return CITES.get(k); });
+    return `<sup class="fn">${nums.map(n => `<a href="#src-${n}" title="Source ${n}">${n}</a>`).join(",")}</sup>`;
+  }
+  function resetCites() { CITES = new Map(); }
+  function renderSources() {
+    const el = document.getElementById("sources"); if (!el) return;
+    const entries = [...CITES.entries()].sort((a, b) => a[1] - b[1]);
+    if (!entries.length) { el.hidden = true; return; } el.hidden = false;
+    el.querySelector("ol").innerHTML = entries.map(([k, n]) => { const r = REFS[k];
+      const body = !r ? `<span class="unverified">Reference "${esc(k)}" not found</span>`
+        : `${esc(r.citation)} ${r.url && r.verified ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.url.replace(/^https?:\/\//, "").slice(0, 64))}${r.url.length > 72 ? "…" : ""} ↗</a>` : `<span class="unverified">link pending verification</span>`}`;
+      return `<li id="src-${n}">${body}</li>`; }).join("");
+  }
+  const SOURCES_HTML = `<section class="sources" id="sources" hidden><h2>Sources</h2><p>Numbered in order of first citation on this page. Each number links to the paper, filing, report or reporting the claim rests on. Italic amber means the citation is recorded but its link hasn't been confirmed yet.</p><ol></ol></section>`;
+
+  /* expandable entries */
+  function wireEntries(root = document) {
+    root.querySelectorAll(".entry").forEach(e => { const h = e.querySelector(".entry-head"); if (!h || h.dataset.wired) return; h.dataset.wired = "1";
+      h.addEventListener("click", () => { const o = e.classList.toggle("is-open"); h.setAttribute("aria-expanded", o); }); });
+  }
+  function jumpToHash(prefix) {
+    if (!location.hash.startsWith("#" + prefix)) return;
+    const e = document.getElementById(location.hash.slice(1)); if (!e) return;
+    e.hidden = false; e.classList.add("is-open"); e.scrollIntoView({ behavior: "smooth", block: "start" }); e.classList.add("is-highlighted");
+  }
+
+  /* tooltip */
+  let tip = null;
+  function tooltip() { if (!tip) { tip = document.createElement("div"); tip.className = "tooltip"; tip.setAttribute("role", "status"); document.body.appendChild(tip); } return tip; }
+  function showTip(html, evt) { const t = tooltip(); t.innerHTML = html; t.style.display = "block"; const pad = 14; let x = evt.clientX + pad, y = evt.clientY + pad; const r = t.getBoundingClientRect(); if (x + r.width > innerWidth - 8) x = evt.clientX - r.width - pad; if (y + r.height > innerHeight - 8) y = evt.clientY - r.height - pad; t.style.left = x + "px"; t.style.top = y + "px"; }
+  function hideTip() { if (tip) tip.style.display = "none"; }
+  function bindTips(root) { root.querySelectorAll("[data-tip]").forEach(n => { n.addEventListener("mousemove", e => showTip(n.dataset.tip, e)); n.addEventListener("mouseleave", hideTip); n.addEventListener("focus", e => { const b = n.getBoundingClientRect(); showTip(n.dataset.tip, { clientX: b.right, clientY: b.top }); }); n.addEventListener("blur", hideTip); }); }
+
+  /* generic signal entry (Risk, Bubble, Curve pages) */
+  function signalEntry(s) {
+    const color = s.direction === "escalating" ? "var(--up)" : s.direction === "easing" ? "var(--down)" : "var(--flat)";
+    return `<article class="entry" id="signal-${s.id}" data-id="${s.id}" data-category="${esc(s.category || "")}" data-direction="${esc(s.direction || "")}" data-search="${esc([s.title, s.summary, s.category, s.source_site].join(" ").toLowerCase())}" style="border-left-color:${color}">
+      <button class="entry-head" type="button" aria-expanded="false">
+        <div class="score-badge" title="Severity ${s.severity ?? "–"}/5">${s.severity ?? "–"}<span>SEV</span></div>
+        <div class="entry-main"><p class="entry-title">${esc(s.title)}</p><div class="badges">
+          ${s.date_found === todayISO() ? `<span class="badge new-badge">New</span>` : ""}
+          ${s.direction ? `<span class="badge dir-${esc(s.direction)}">${DIR_LABEL[s.direction]}</span>` : ""}
+          ${s.category ? `<span class="badge field">${esc(s.category)}</span>` : ""}
+          ${s.reality_tier ? `<span class="badge"><span class="dot" style="background:var(--tier-${s.reality_tier})"></span>Tier ${s.reality_tier} · ${TIER_LABEL[s.reality_tier]}</span>` : ""}
+          <span class="badge">${esc(s.source_site || "")}</span><span class="badge mono">${fmtDate(s.source_publish_date)}</span>
+        </div></div>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="entry-body"><div class="entry-body-inner"><div class="entry-body-content">
+        <p class="entry-summary">${esc(s.summary)}${cite(s.reference_key)}</p>
+        <ul class="entry-bullets">${bullets(s.bullet_points).map(b => `<li>${esc(b)}</li>`).join("")}</ul>
+        ${s.why_it_matters ? `<p class="callout"><strong>Why it matters:</strong> ${esc(s.why_it_matters)}</p>` : ""}
+        ${s.hype_check ? `<p class="callout hype"><strong>Hype check:</strong> ${esc(s.hype_check)}</p>` : ""}
+        ${s.counterpoint ? `<p class="callout counter"><strong>The other side:</strong> ${esc(s.counterpoint)}</p>` : ""}
+        ${s.conflict_note ? `<p class="entry-meta"><strong>Conflicts / caveats:</strong> ${esc(s.conflict_note)}</p>` : ""}
+        <a class="entry-link" href="${esc(s.link)}" target="_blank" rel="noopener">Read source ↗</a>
+      </div></div></div></article>`;
+  }
+
+  /* boot helper */
+  async function boot(opts, fn) {
+    header(opts);
+    document.querySelector(".app").insertAdjacentHTML("beforeend", (opts.sources === false ? "" : SOURCES_HTML) + `<footer class="note">Reads live from Supabase. Sister sites: <a href="${LONGEVITY_URL}" target="_blank" rel="noopener">Longevity News</a> · <a href="https://richiebuchanan.github.io/SuretyMarketIntelligence/" target="_blank" rel="noopener">Surety Market Intelligence</a>.</footer>`);
+    connState("loading", "Connecting to Supabase…");
+    if (!client()) return;
+    await loadRefs();
+    try { await fn(sb); connState("ok"); } catch (e) { connState("error", `Couldn't load data (${e.message || e}). Try reloading.`); console.error(e); }
+  }
+
+  window.PT = { esc, fmtDate, fmtMonth, fmtDateTime, bullets, todayISO, TIER_LABEL, DIR_LABEL, LONGEVITY_URL,
+    boot, lastUpdate, connState, cite, resetCites, renderSources, wireEntries, jumpToHash, showTip, hideTip, bindTips, signalEntry, get sb() { return sb; } };
+})();
+
+</script>
+<script>
+const { esc, cite, fmtMonth } = PT;
+let DATA = [], METRICS = []; const state = { search: "", dir: "all", cat: "all" };
+const DIRS = [["all", "All"], ["escalating", "↑ More bubble-like"], ["easing", "↓ Less bubble-like"], ["neutral", "→ Mixed"]];
+
+const CHECKS = [
+  ["warn", "Spending far ahead of revenue", "Big Tech's 2026 capex runs about $803B–$828B. The leading labs' revenue is growing fast but is still a fraction of that spend, and much of the spend is a bet on revenue years away.", ["hl-2026-capex-828", "decoder-2026-openai-50b", "techspot-2026-anthropic-s1"]],
+  ["warn", "Borrowing to build", "AI-related debt raised hit $466B through September 2026, up from $101B a year earlier. Debt is what turns a valuation drop into a credit crisis.", ["iofund-2026-ai-debt"]],
+  ["warn", "Suppliers financing their customers", "Chipmakers and cloud providers are investing in or guaranteeing the AI labs that buy from them, which can overstate real demand.", ["axios-2026-nvidia-openai", "npr-2026-nvidia-750b"]],
+  ["mixed", "Valuations on promises", "The IMF counts about $950B of financing resting on $1.4T of future revenue commitments; Anthropic's reported IPO target is roughly 45–60x its first-half 2026 revenue doubled (lower against its faster current run rate).", ["cfa-2026-bubble-test", "citywire-2026-anthropic-s1"]],
+  ["ok", "Real, fast-growing revenue", "Unlike most dot-com companies, the leaders have large and rising sales: Anthropic $16.3B in H1 2026 (from $1.2B), OpenAI about $50B annualized.", ["techspot-2026-anthropic-s1", "decoder-2026-openai-50b"]],
+  ["ok", "Builders paying from cash flow", "Most hyperscaler capex is still funded by operating cash flow from profitable core businesses, not by companies with no income.", ["walnut-2026-capex-tracker"]],
+];
+function renderChecklist() {
+  const lab = { warn: "Warning", ok: "Reassuring", mixed: "Mixed" };
+  document.getElementById("checklist").innerHTML = CHECKS.map(([t, h, b, refs]) => `<span class="tag ${t}">${lab[t]}</span><p><strong>${esc(h)}.</strong> ${esc(b)}${cite(refs)}</p>`).join("");
+}
+
+/* small-multiple charts: one measure each, single hue, direct value labels, hover tooltips */
+function barChart(rows, unit) {
+  const W = 420, H = 150, padL = 8, padR = 8, top = 22, bottom = 26, max = Math.max(...rows.map(r => r.value)) * 1.08;
+  const bw = Math.min(90, (W - padL - padR) / rows.length - 24), gap = (W - padL - padR - bw * rows.length) / (rows.length + 1);
+  let s = `<svg class="viz" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(rows.map(r => `${r.label}: ${unit}${r.value}`).join(", "))}"><line class="axis" x1="${padL}" x2="${W - padR}" y1="${H - bottom}" y2="${H - bottom}"/>`;
+  rows.forEach((r, i) => { const h = (r.value / max) * (H - top - bottom), x = padL + gap + i * (bw + gap), y = H - bottom - h;
+    s += `<path d="M${x} ${H - bottom} V${y + 4} Q${x} ${y} ${x + 4} ${y} H${x + bw - 4} Q${x + bw} ${y} ${x + bw} ${y + 4} V${H - bottom} Z" fill="var(--accent)" opacity="${i === rows.length - 1 ? 1 : 0.55}"/>`;
+    s += `<text class="val" x="${x + bw / 2}" y="${y - 6}" text-anchor="middle">${unit}${r.value}${unit === "$" ? "B" : ""}</text><text x="${x + bw / 2}" y="${H - 8}" text-anchor="middle">${esc(r.label)}</text>`;
+    s += `<rect class="hit" x="${x - 6}" y="${top - 16}" width="${bw + 12}" height="${H - top}" tabindex="0" data-tip="${esc(`<strong>${esc(r.label)}</strong><span class="mono">${unit}${r.value}${unit === "$" ? "B" : ""}</span>${r.note ? `<br>${esc(r.note)}` : ""}`)}"/>`; });
+  return s + `</svg>`;
+}
+function lineChart(rows) {
+  const W = 420, H = 150, padL = 34, padR = 16, top = 20, bottom = 26;
+  const t = r => new Date(r.observed_on).getTime(), t0 = t(rows[0]), t1 = t(rows[rows.length - 1]), max = Math.ceil(Math.max(...rows.map(r => r.value)) / 10) * 10 + 10;
+  const x = r => padL + (t(r) - t0) / (t1 - t0) * (W - padL - padR), y = v => H - bottom - v / max * (H - top - bottom);
+  let s = `<svg class="viz" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(rows.map(r => `${r.label}: $${r.value}B`).join(", "))}">`;
+  for (let v = 0; v <= max; v += max / 4) s += `<line class="grid" x1="${padL}" x2="${W - padR}" y1="${y(v)}" y2="${y(v)}"/><text x="${padL - 6}" y="${y(v) + 4}" text-anchor="end">$${v}B</text>`;
+  s += `<polyline points="${rows.map(r => `${x(r)},${y(r.value)}`).join(" ")}" fill="none" stroke="var(--accent)" stroke-width="2"/>`;
+  rows.forEach((r, i) => { s += `<circle cx="${x(r)}" cy="${y(r.value)}" r="4.5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>`;
+    if (i === 0 || i === rows.length - 1) s += `<text class="val" x="${x(r)}" y="${y(r.value) - 10}" text-anchor="${i === 0 ? "start" : "end"}">$${r.value}B</text>`;
+    if (i === 0 || i === rows.length - 1) s += `<text x="${x(r)}" y="${H - 8}" text-anchor="${i === 0 ? "start" : "end"}">${esc(fmtMonth(r.observed_on))}</text>`;
+    s += `<circle class="hit" cx="${x(r)}" cy="${y(r.value)}" r="14" tabindex="0" data-tip="${esc(`<strong>${esc(r.label)}</strong><span class="mono">$${r.value}B annualized</span>${r.note ? `<br>${esc(r.note)}` : ""}`)}"/>`; });
+  return s + `</svg>`;
+}
+function renderMultiples() {
+  const by = k => METRICS.filter(m => m.metric_key === k).sort((a, b) => a.observed_on.localeCompare(b.observed_on));
+  const panels = [
+    ["capex_bigfour", "Big-four hyperscaler capex", "Amazon, Alphabet, Microsoft, Meta; $ billions", r => barChart(r, "$")],
+    ["ai_debt_ytd", "AI-related debt raised, Jan–Sep", "Morgan Stanley data; $ billions", r => barChart(r, "$")],
+    ["openai_arr", "OpenAI annualized revenue run rate", "Run rate projects one month across a year; not audited", r => lineChart(r)],
+    ["anthropic_h1_rev", "Anthropic first-half revenue", "From the S-1 filing; $ billions", r => barChart(r, "$")],
+  ];
+  const host = document.getElementById("multiples");
+  host.innerHTML = panels.map(([k, title, sub, fn]) => { const rows = by(k); if (!rows.length) return "";
+    const refs = [...new Set(rows.flatMap(r => (r.source_refs || []).map(x => x.key)))];
+    return `<div class="mini"><h3>${esc(title)}${cite(refs)}</h3><p class="sub">${esc(sub)}</p>${fn(rows)}
+      <details><summary class="table-toggle">Table</summary><table class="data-table"><tbody>${rows.map(r => `<tr><td>${esc(r.label)}</td><td class="num">${r.unit === "$B" ? "$" : ""}${r.value}${r.unit === "$B" ? "B" : esc(r.unit)}</td></tr>`).join("")}</tbody></table></details></div>`; }).join("");
+  PT.bindTips(host);
+}
+function renderControls() {
+  const el = document.getElementById("dir-toggle");
+  el.innerHTML = DIRS.map(([k, l]) => `<button type="button" class="cat-btn ${k === state.dir ? "is-active" : ""}" data-k="${k}" aria-pressed="${k === state.dir}">${l} <span style="color:var(--muted)">${k === "all" ? DATA.length : DATA.filter(d => d.direction === k).length}</span></button>`).join("");
+  el.querySelectorAll(".cat-btn").forEach(b => b.addEventListener("click", () => { state.dir = b.dataset.k; renderControls(); apply(); }));
+  const cats = [...new Set(DATA.map(d => d.category).filter(Boolean))].sort();
+  document.getElementById("cat-select").innerHTML = `<option value="all">All categories</option>` + cats.map(c => `<option${c === state.cat ? " selected" : ""}>${esc(c)}</option>`).join("");
+  document.getElementById("balance").innerHTML = `<span class="badge dir-escalating">${DATA.filter(d => d.direction === "escalating").length} more bubble-like</span><span class="badge dir-easing">${DATA.filter(d => d.direction === "easing").length} less bubble-like</span><span class="badge">${DATA.filter(d => d.direction === "neutral").length} mixed</span>`;
+}
+function apply() {
+  let n = 0;
+  document.querySelectorAll("#ledger .entry").forEach(e => { const m = (state.dir === "all" || e.dataset.direction === state.dir) && (state.cat === "all" || e.dataset.category === state.cat) && (!state.search || e.dataset.search.includes(state.search)); e.hidden = !m; if (m) n++; });
+  document.getElementById("empty-state").hidden = n !== 0;
+}
+PT.boot({ page: "bubble.html", title: "Bubble Watch", tagline: "Is AI investment a dot-com or railroad-style bubble headed for a crash? A bubble can burst even when the technology is real, so we track the money separately from the science. Not investment advice." }, async sb => {
+  const [s, m] = await Promise.all([
+    sb.from("phase_signals").select("*").eq("track", "bubble").order("source_publish_date", { ascending: false }),
+    sb.from("phase_curve_metrics").select("*").eq("track", "bubble") ]);
+  if (s.error) throw s.error; DATA = s.data || []; METRICS = (m.data || []).map(r => ({ ...r, value: +r.value }));
+  PT.resetCites(); renderChecklist(); renderMultiples();
+  document.getElementById("ledger").innerHTML = DATA.map(PT.signalEntry).join("");
+  PT.wireEntries(); renderControls(); apply(); PT.renderSources(); PT.jumpToHash("signal-");
+  document.getElementById("search-input").addEventListener("input", e => { state.search = e.target.value.trim().toLowerCase(); apply(); });
+  document.getElementById("cat-select").addEventListener("change", e => { state.cat = e.target.value; apply(); });
+  document.getElementById("reset-btn").addEventListener("click", () => { Object.assign(state, { search: "", dir: "all", cat: "all" }); document.getElementById("search-input").value = ""; renderControls(); apply(); });
+  await PT.lastUpdate(DATA.map(d => d.inserted_at));
+});
+</script>
+</body>
+</html>
