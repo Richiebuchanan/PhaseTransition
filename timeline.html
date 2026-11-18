@@ -569,7 +569,7 @@ function renderCats() {
   t.querySelectorAll(".cat-btn").forEach(b => b.addEventListener("click", () => { state.cat = b.dataset.k; state.month = null; renderCoverage(); renderCats(); renderLedger(); }));
 }
 function renderYears() {
-  const years = [...new Set(DATA.map(r => r.event_date.slice(0, 4)))].sort();
+  const years = [...new Set(DATA.map(r => r.event_date.slice(0, 4)))].sort().reverse();
   document.getElementById("year-select").innerHTML = `<option value="all">All years</option>` + years.map(y => `<option value="${y}">${y}</option>`).join("");
 }
 const whoLinks = names => (names || []).map(n => VOICE_NAMES.has(n) ? `<a href="voices.html#${slug(n)}">${esc(n)}</a>` : esc(n)).join(", ");
@@ -581,10 +581,10 @@ function renderLedger() {
     && (!state.month || ym(r.event_date) === state.month) && (!state.landmark || r.landmark)
     && (!q || [r.title, r.summary, (r.companies || []).join(" "), (r.people || []).join(" "), CAT_LABEL[r.category]].join(" ").toLowerCase().includes(q)));
   const groups = {}; rows.forEach(r => (groups[ym(r.event_date)] ||= []).push(r));
-  const keys = Object.keys(groups).sort();
+  const keys = Object.keys(groups).sort().reverse();
   document.getElementById("ledger").innerHTML = keys.map(k => `<h3 class="month-head" id="m-${k}">${esc(monthName(k))} <span class="n">${groups[k].length} entr${groups[k].length === 1 ? "y" : "ies"}</span></h3>` + groups[k].map(entry).join("")).join("");
   const filt = [state.year !== "all" && state.year, state.month && monthName(state.month), state.cat !== "all" && CAT_LABEL[state.cat], state.landmark && "landmarks only"].filter(Boolean);
-  document.getElementById("result-line").innerHTML = `Showing <strong>${rows.length}</strong> of ${DATA.length} entries${filt.length ? ` · ${esc(filt.join(" · "))}` : ""}. Oldest first, so you can read it like a story.`;
+  document.getElementById("result-line").innerHTML = `Showing <strong>${rows.length}</strong> of ${DATA.length} entries${filt.length ? ` · ${esc(filt.join(" · "))}` : ""}. Newest first.`;
   document.getElementById("empty-state").hidden = rows.length !== 0;
   PT.wireEntries(); PT.renderSources();
 }
@@ -622,7 +622,7 @@ function wire() {
 }
 PT.boot({ page: "timeline.html", title: "The Record", tagline: "Everything important that has happened in AI since January 2023, month by month: graded, sourced and explained in plain English." }, async sb => {
   wire();
-  const [t, v] = await Promise.all([sb.from("phase_timeline").select("*").order("event_date").order("id"), sb.from("phase_voices").select("name")]);
+  const [t, v] = await Promise.all([sb.from("phase_timeline").select("*").order("event_date", { ascending: false }).order("id", { ascending: false }), sb.from("phase_voices").select("name")]);
   if (t.error) throw t.error;
   DATA = (t.data || []).map(r => ({ ...r, reality_tier: r.reality_tier ? +r.reality_tier : null, magnitude: r.magnitude ? +r.magnitude : null }));
   VOICE_NAMES = new Set((v.data || []).map(x => x.name));
